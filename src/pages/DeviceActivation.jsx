@@ -10,6 +10,7 @@ import {
   clearDeviceKeys,
 } from '../lib/deviceCrypto';
 import { registerDevice, requestDeviceTransfer } from '../lib/razorpay';
+import { CheckmarkAnim } from './CheckmarkAnim';
 import './Auth.css';
 
 /**
@@ -269,7 +270,7 @@ function DeviceActivation() {
           {/* ============ PHASE: ACTIVATED ============ */}
           {phase === 'active' && (
             <div className="activation-loading-state" style={{ textAlign: 'center' }}>
-              <div className="activation-success-icon">✓</div>
+              <CheckmarkAnim size={52} />
               <h2 style={{ fontFamily: 'var(--font-serif)', color: 'var(--green)', marginBottom: '8px' }}>
                 YOUR DEVICE IS ACTIVE ✓
               </h2>

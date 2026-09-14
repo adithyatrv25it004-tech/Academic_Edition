@@ -2696,3 +2696,677 @@
   }
 }
 
+
+/* ==========================================================================
+   REFINED 9-SECTION HOMEPAGE & GLOBAL DEVICE ADAPTATION
+   ========================================================================== */
+
+/* --- 1. Hero Typography Reveal --- */
+.hero-headline .headline-line-1 {
+  display: block;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: heroTextReveal 550ms var(--ease-out-editorial) 80ms forwards;
+}
+
+.hero-headline .headline-line-2 {
+  display: block;
+  opacity: 0;
+  transform: translateY(8px);
+  animation: heroTextReveal 550ms var(--ease-out-editorial) 240ms forwards; /* 160ms later */
+}
+
+@keyframes heroTextReveal {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Hero Subtle Book Depth (Desktop only) --- */
+.hero-book-img {
+  width: min(100%, 450px);
+  height: auto;
+  display: block;
+  filter: drop-shadow(0 20px 32px rgba(23, 32, 51, 0.16));
+  animation: bookFloatSlow 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes bookFloatSlow {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-5px);
+  }
+}
+
+/* CTA Motion: Arrow moves 4px right, button lifts 2px, no pulse */
+.btn-primary.hero-cta-btn {
+  transition: transform 220ms var(--ease-smooth), box-shadow 220ms ease, background-color 200ms ease;
+  min-height: 48px;
+}
+
+.btn-primary.hero-cta-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(23, 32, 51, 0.18);
+}
+
+.btn-primary.hero-cta-btn .cta-arrow {
+  display: inline-block;
+  transition: transform 220ms var(--ease-smooth);
+}
+
+.btn-primary.hero-cta-btn:hover .cta-arrow {
+  transform: translateX(4px);
+}
+
+/* --- 3. Gold Section Dividers (width 0 -> full width over 500-650ms) --- */
+.gold-divider {
+  width: 64px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), #d4af37, transparent);
+  margin: 18px 0 32px;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 600ms var(--ease-out-editorial);
+}
+
+.gold-divider.centered {
+  margin-left: auto;
+  margin-right: auto;
+  transform-origin: center;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+.section-header.is-revealed .gold-divider,
+.is-revealed > .gold-divider,
+.gold-divider.is-revealed {
+  transform: scaleX(1);
+}
+
+/* --- 4. What's Inside (5 Cards Only, Staggered by 70ms) --- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+}
+
+.chapter-card {
+  position: relative;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: clamp(18px, 2.5vw, 24px);
+  transition: transform 220ms var(--ease-smooth),
+              border-color 220ms ease,
+              box-shadow 220ms ease;
+}
+
+.chapter-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(199, 154, 69, 0.6);
+  box-shadow: 0 8px 24px -4px rgba(23, 32, 51, 0.08);
+}
+
+/* --- 5. Preview Cards (3 Cards Only, 80ms Stagger, Paper Sheet Feel) --- */
+.peek-grid-three {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+
+.peek-card {
+  position: relative;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 24px 20px 20px;
+  box-shadow: 0 4px 14px rgba(23, 32, 51, 0.04);
+  transition: transform 240ms var(--ease-smooth),
+              box-shadow 240ms ease,
+              border-color 240ms ease;
+}
+
+.peek-card.reveal-init {
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 550ms var(--ease-out-editorial),
+              transform 550ms var(--ease-out-editorial),
+              box-shadow 240ms ease,
+              border-color 240ms ease;
+}
+
+.peek-card.reveal-init.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.peek-card.stagger-1.is-revealed {
+  transition-delay: 0ms;
+}
+
+.peek-card.stagger-2.is-revealed {
+  transition-delay: 80ms;
+}
+
+.peek-card.stagger-3.is-revealed {
+  transition-delay: 160ms;
+}
+
+/* Subtle paper tilt on hover (max 0.6deg) */
+.peek-card:hover {
+  transform: translateY(-3px) rotate(-0.45deg);
+  border-color: var(--border-dark);
+  box-shadow: 0 12px 28px -6px rgba(23, 32, 51, 0.1);
+}
+
+/* Subtle lock overlay (never reveals paid content) */
+.peek-blur-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 54px;
+  background: linear-gradient(to top, rgba(253, 252, 248, 0.98) 25%, rgba(253, 252, 248, 0.65) 75%, transparent 100%);
+  backdrop-filter: blur(2px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  transition: backdrop-filter 220ms ease;
+}
+
+.peek-card:hover .peek-blur-overlay {
+  backdrop-filter: blur(1.5px);
+}
+
+.peek-sample-pill {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--muted-brown);
+  background-color: var(--paper);
+  border: 1px solid var(--border);
+  padding: 4px 12px;
+  border-radius: 20px;
+  box-shadow: 0 2px 6px rgba(23, 32, 51, 0.06);
+}
+
+/* --- 6. Revision Flow: Progressive Connector Drawing --- */
+.system-section {
+  border-top: 1px solid var(--border-light);
+  background-color: var(--surface);
+}
+
+.flow-timeline {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  position: relative;
+  margin-top: 44px;
+}
+
+.flow-timeline::before {
+  content: "";
+  position: absolute;
+  top: -14px;
+  left: 20px;
+  right: 20px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--blue), var(--navy));
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 900ms cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 0.8;
+}
+
+.flow-timeline.is-revealed::before {
+  transform: scaleX(1);
+}
+
+.flow-step-card {
+  position: relative;
+  padding: 22px 18px;
+  background-color: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: transform 0.2s var(--ease-smooth),
+              border-color 0.2s ease,
+              box-shadow 0.2s ease;
+}
+
+.flow-step-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--border-dark);
+  box-shadow: var(--shadow-subtle);
+}
+
+/* Progressive reveal of flow stages as connector reaches them */
+.flow-timeline .flow-step-card {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 450ms var(--ease-out-editorial),
+              transform 450ms var(--ease-out-editorial),
+              border-color 200ms ease,
+              box-shadow 200ms ease;
+}
+
+.flow-timeline.is-revealed .flow-step-card:nth-child(1) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 60ms;
+}
+
+.flow-timeline.is-revealed .flow-step-card:nth-child(2) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 220ms;
+}
+
+.flow-timeline.is-revealed .flow-step-card:nth-child(3) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 380ms;
+}
+
+.flow-timeline.is-revealed .flow-step-card:nth-child(4) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 540ms;
+}
+
+.flow-timeline.is-revealed .flow-step-card:nth-child(5) {
+  opacity: 1;
+  transform: translateY(0);
+  transition-delay: 700ms;
+}
+
+/* --- 7. Why It Works Section --- */
+.why-it-works-section {
+  border-top: 1px solid var(--border-light);
+  background-color: var(--paper);
+}
+
+.why-it-works-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+
+.why-value-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 20px;
+  background-color: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  transition: transform 200ms var(--ease-smooth),
+              border-color 200ms ease,
+              box-shadow 200ms ease;
+}
+
+.why-value-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--border-dark);
+  box-shadow: var(--shadow-subtle);
+}
+
+.why-value-icon {
+  font-size: 24px;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.why-value-title {
+  font-family: var(--font-serif);
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--ink);
+  margin: 0 0 6px;
+}
+
+.why-value-desc {
+  font-size: 13.5px;
+  color: var(--muted-brown);
+  line-height: 1.55;
+  margin: 0;
+}
+
+/* --- 8. Curiosity Moment (3 Quiet Stateless Cards) --- */
+.curiosity-moment-block {
+  padding-bottom: 24px;
+}
+
+.curiosity-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-top: 36px;
+}
+
+.curiosity-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 28px 24px;
+  text-align: center;
+  transition: transform 220ms var(--ease-smooth),
+              border-color 220ms ease,
+              box-shadow 220ms ease;
+}
+
+.curiosity-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(199, 154, 69, 0.5);
+  box-shadow: 0 8px 20px rgba(23, 32, 51, 0.06);
+}
+
+.curiosity-phase {
+  display: inline-block;
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.curiosity-tagline {
+  font-family: var(--font-serif);
+  font-size: 19px;
+  color: var(--ink);
+  margin: 0 0 10px;
+  font-style: italic;
+  font-weight: 600;
+}
+
+.curiosity-subtext {
+  font-size: 13px;
+  color: var(--muted-brown);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* --- 9. FAQ Accordion: Rotate + Icon Smoothly into × in 200ms --- */
+.faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 20px 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: clamp(15.5px, 2.5vw, 17.5px);
+  font-weight: 700;
+  color: var(--ink);
+  min-height: 52px;
+}
+
+.faq-icon-bubble {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1;
+  flex-shrink: 0;
+  margin-left: 14px;
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 200ms ease,
+              border-color 200ms ease,
+              color 200ms ease;
+}
+
+.faq-item.open .faq-icon-bubble {
+  transform: rotate(45deg);
+  background-color: var(--ink);
+  border-color: var(--ink);
+  color: var(--paper);
+}
+
+.faq-answer {
+  overflow: hidden;
+  padding: 0 24px 20px;
+  animation: faqOpenFade 220ms ease forwards;
+}
+
+@keyframes faqOpenFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- 10. Global Devices Responsiveness --- */
+@media (max-width: 1100px) {
+  .features-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+  .trust-steps-grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .peek-grid-three {
+    grid-template-columns: 1fr;
+    max-width: 520px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .curiosity-grid {
+    grid-template-columns: 1fr;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+
+@media (max-width: 860px) {
+  /* Revision Flow becomes vertical on tablet / mobile */
+  .flow-timeline {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-left: 28px;
+  }
+
+  .flow-timeline::before {
+    top: 14px;
+    bottom: 14px;
+    left: 10px;
+    right: auto;
+    width: 2px;
+    height: auto;
+    transform: scaleY(0);
+    transform-origin: top center;
+    background: linear-gradient(180deg, var(--gold), var(--blue), var(--navy));
+  }
+
+  .flow-timeline.is-revealed::before {
+    transform: scaleY(1);
+  }
+
+  .flow-arrow-indicator {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  /* Mobile container & typography */
+  .page-container {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .hero-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+
+  .hero-visual-wrapper {
+    overflow: visible;
+  }
+
+  .hero-book-img {
+    max-width: clamp(240px, 75vw, 340px);
+    margin: 0 auto;
+  }
+
+  /* Paper tabs stay comfortably inside the screen */
+  .tab-notes {
+    top: 4%;
+    left: 4%;
+  }
+
+  .tab-pyq {
+    bottom: 6%;
+    right: 4%;
+    top: auto;
+  }
+
+  /* Why this pack grid */
+  .problem-solution-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  /* Why it works grid */
+  .why-it-works-grid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  /* Mobile CTA full width */
+  .hero-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-primary.hero-cta-btn,
+  .btn-secondary.hero-secondary-btn {
+    width: 100%;
+    text-align: center;
+    justify-content: center;
+  }
+
+  /* Disable hover tilt on touch devices */
+  .peek-card:hover {
+    transform: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .hero-meta {
+    flex-direction: column;
+    gap: 6px;
+    align-items: flex-start;
+  }
+  .hero-meta-dot {
+    display: none;
+  }
+  .nav-links {
+    display: none;
+  }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .hero-headline .headline-line-1,
+  .hero-headline .headline-line-2,
+  .hero-book-img,
+  .gold-divider,
+  .flow-timeline::before,
+  .flow-step-card,
+  .peek-card {
+    opacity: 1 !important;
+    transform: none !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* ==========================================================================
+   ONE-TIME SVG CHECKMARK DRAW ANIMATION
+   ========================================================================== */
+.checkmark-wrapper {
+  position: relative;
+  display: grid;
+  place-items: center;
+}
+
+.svg-checkmark-anim {
+  display: block;
+  stroke: var(--green);
+  stroke-width: 2.8;
+  stroke-miterlimit: 10;
+  border-radius: 50%;
+  background: var(--green-light);
+}
+
+.svg-checkmark-circle {
+  stroke-dasharray: 166;
+  stroke-dashoffset: 166;
+  stroke-width: 2.6;
+  stroke-miterlimit: 10;
+  stroke: var(--green);
+  animation: svgCircleStroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+.svg-checkmark-check {
+  transform-origin: 50% 50%;
+  stroke-dasharray: 48;
+  stroke-dashoffset: 48;
+  stroke-width: 3.2;
+  stroke: var(--green);
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  animation: svgCheckStroke 0.35s cubic-bezier(0.65, 0, 0.45, 1) 0.45s forwards;
+}
+
+@keyframes svgCircleStroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes svgCheckStroke {
+  100% {
+    stroke-dashoffset: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .svg-checkmark-circle,
+  .svg-checkmark-check {
+    stroke-dashoffset: 0 !important;
+    animation: none !important;
+  }
+}

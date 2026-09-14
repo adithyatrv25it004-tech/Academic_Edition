@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { loadRazorpayScript, createPaymentOrder } from "../lib/razorpay";
+import { CheckmarkAnim } from "./CheckmarkAnim";
 import "./Auth.css";
 import bookThumbnail from "../assets/atp-revision-book.png";
 
@@ -271,7 +272,7 @@ function Payment() {
           {/* Dynamic States: Unlocked / Confirming / Error / Ready to Pay */}
           {isUnlocked ? (
             <div className="utr-success-box" style={{ borderColor: "var(--green)" }}>
-              <div className="utr-success-icon" style={{ backgroundColor: "var(--green)", color: "#fff" }}>✓</div>
+              <CheckmarkAnim size={48} />
               <h3 style={{ color: "var(--green)" }}>Revision Vault Unlocked ✓</h3>
               <p>
                 Your ₹49 payment has been verified by the server. Opening your study dashboard now...

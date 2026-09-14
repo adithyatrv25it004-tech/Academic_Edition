@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { CheckmarkAnim } from "./CheckmarkAnim";
 import "./Auth.css";
 
 function maskEmail(email) {
@@ -263,7 +264,7 @@ function VerifyOtp({ email: propEmail, onBack }) {
 
         {isVerified ? (
           <div className="otp-success-card">
-            <div className="otp-success-icon" aria-hidden="true">✓</div>
+            <CheckmarkAnim size={48} />
             <h3>Email verified ✓</h3>
             <p>{destinationNotice || "Taking you to your Revision Vault..."}</p>
           </div>

@@ -9,147 +9,150 @@ const REVISION_STEPS = [
     num: "01",
     phase: "UNDERSTAND",
     title: "Simplified Notes",
-    desc: "Understand concepts without digging through unnecessary textbook detail.",
+    desc: "Understand core concepts quickly without textbook fluff.",
   },
   {
     num: "02",
     phase: "PRACTICE",
     title: "Previous Year Questions",
-    desc: "See how important topics have appeared in actual exams.",
+    desc: "See how topics appear in real exams.",
   },
   {
     num: "03",
     phase: "FOCUS",
     title: "Important Questions",
-    desc: "Know which areas deserve more of your revision time.",
+    desc: "Focus your time where it matters most.",
   },
   {
     num: "04",
     phase: "REVISE",
     title: "Last-Minute Material",
-    desc: "Compact material built for the final hours before the exam.",
+    desc: "Compact material built for the final hours.",
   },
   {
     num: "05",
     phase: "RECALL",
     title: "Quick Recall",
-    desc: "Refresh definitions, concepts and important points in minutes.",
+    desc: "Refresh key ideas in minutes before the exam.",
   },
 ];
 
-const RESOURCE_MODULES = [
+const WHATS_INSIDE_MODULES = [
   {
     num: "01",
+    icon: "📘",
     title: "Simplified Notes",
-    desc: "Understand the concept without digging through unnecessary textbook detail.",
+    desc: "Understand the core concept quickly.",
     tag: "Core Concepts",
-    why: "Provides crystal-clear conceptual explanations that eliminate guesswork and confusion.",
   },
   {
     num: "02",
+    icon: "📝",
     title: "Previous Year Questions",
-    desc: "See how important topics have appeared in actual exams.",
+    desc: "See how topics appear in real exams.",
     tag: "Exam Solved",
-    why: "Helps you recognize recurring examination question patterns and mark distribution.",
   },
   {
     num: "03",
+    icon: "🎯",
     title: "Important Questions",
-    desc: "Know which areas deserve more of your revision time.",
+    desc: "Focus your time where it matters most.",
     tag: "Priority Focus",
-    why: "Guides your attention toward high-weightage topics so you make the best use of study time.",
   },
   {
     num: "04",
+    icon: "⚡",
     title: "Last-Minute Revision",
-    desc: "Compact material built for the final hours before the exam.",
-    tag: "High-Yield",
-    why: "Condenses key definitions, tables, and rules into quick sheets for the night before.",
+    desc: "Compact material for the final hours.",
+    tag: "Final Hour",
   },
   {
     num: "05",
+    icon: "🧠",
     title: "Quick Recall",
-    desc: "Refresh definitions, concepts and important points in minutes.",
+    desc: "Refresh key ideas in minutes.",
     tag: "Memory Triggers",
-    why: "Fast memory activation right before walking into the examination hall.",
   },
 ];
 
-const WHAT_STUDENT_GETS = [
+const WHY_IT_WORKS_POINTS = [
   {
     icon: "📘",
-    title: "Concept-focused notes",
-    desc: "Clear explanations that emphasize essential theory and core principles without textbook fluff.",
+    title: "Clear concepts",
+    desc: "Digestible summaries that strip away textbook fluff and retain core principles.",
   },
   {
     icon: "📝",
-    title: "Previous-year question collection",
-    desc: "Past exam questions categorized by topic to highlight genuine exam patterns.",
+    title: "Exam-oriented practice",
+    desc: "Past exam questions organized to highlight genuine recurring question patterns.",
   },
   {
     icon: "🎯",
-    title: "Important-topic guidance",
-    desc: "High-probability concepts separated to help you allocate revision time efficiently.",
+    title: "Priority-based revision",
+    desc: "Curated focus areas so you allocate your revision time where it matters most.",
   },
   {
     icon: "⚡",
-    title: "Final-hour revision material",
-    desc: "Compact summaries built specifically for the critical 24 hours before the exam.",
-  },
-  {
-    icon: "🧠",
-    title: "Quick-recall resources",
-    desc: "Memory triggers, definitions, and key formula checkpoints for rapid review sessions.",
-  },
-  {
-    icon: "📱",
-    title: "Mobile-friendly web access",
-    desc: "Responsive digital portal allowing comfortable study on smartphone, tablet, or laptop.",
-  },
-  {
-    icon: "🔐",
-    title: "Personal account access",
-    desc: "Secure login access linked directly to your individual student account.",
+    title: "Fast final-hour recall",
+    desc: "Compact memory sheets designed for high retention right before your exam.",
   },
 ];
 
-const TRUST_STEPS = [
+const CURIOSITY_CARDS = [
+  {
+    phase: "UNDERSTAND",
+    tagline: "Learn the concept.",
+    subtext: "Core theory explained clearly without unnecessary textbook padding.",
+  },
+  {
+    phase: "PRACTICE",
+    tagline: "See the exam pattern.",
+    subtext: "Real university question structures, weightage, and solved formats.",
+  },
+  {
+    phase: "RECALL",
+    tagline: "Bring it back when it matters.",
+    subtext: "High-yield trigger sheets for the critical hours right before the exam.",
+  },
+];
+
+const ACCESS_STEPS = [
   {
     num: "1",
     icon: "👤",
     title: "Create your account",
-    desc: "Register with your name and email address in less than a minute.",
+    desc: "Register with your name and email in less than a minute.",
   },
   {
     num: "2",
     icon: "💳",
-    title: "Make the ₹49 UPI payment",
-    desc: "Pay via UPI QR code or copyable UPI ID using any UPI payment app.",
+    title: "Complete secure ₹49 checkout",
+    desc: "One-time payment processed instantly via secure Razorpay checkout.",
   },
   {
     num: "3",
-    icon: "📋",
-    title: "Submit your UPI Transaction ID / UTR",
-    desc: "Enter your 12-digit reference number so your payment can be matched.",
+    icon: "⚡",
+    title: "Payment is verified automatically",
+    desc: "Zero waiting or manual UTR submissions — access activates immediately.",
   },
   {
     num: "4",
-    icon: "🔍",
-    title: "Payment is verified",
-    desc: "Transaction verification confirms the submission.",
+    icon: "📱",
+    title: "Activate your study device",
+    desc: "Study securely on your chosen device with protected access.",
   },
   {
     num: "5",
     icon: "🔓",
-    title: "Your Revision Vault becomes available",
-    desc: "All 5 revision modules unlock in your student portal ready for study.",
+    title: "Enter the Revision Vault",
+    desc: "Open your personal student dashboard and begin revising right away.",
   },
 ];
 
 const FAQ_ITEMS = [
   {
     q: "What do I receive?",
-    a: "You receive access to all 5 ATP Revision modules: Simplified Concept Notes, Previous Year Questions, Important Questions, Last-Minute Revision Sheets, and Quick Recall Material, all organized within your student dashboard.",
+    a: "You receive instant access to all 5 ATP Revision modules: Simplified Concept Notes, Previous Year Questions, Important Questions, Last-Minute Revision Sheets, and Quick Recall Material, all organized within your student dashboard.",
   },
   {
     q: "Is ₹49 a one-time payment?",
@@ -157,33 +160,25 @@ const FAQ_ITEMS = [
   },
   {
     q: "How does payment verification work?",
-    a: "After completing your ₹49 UPI payment, submit the 12-digit UPI Transaction Reference / UTR number in the checkout form. Once verified, your account is activated with full access to the vault.",
+    a: "Payment verification is completely automatic. Once you complete the ₹49 checkout through our secure Razorpay gateway, your account activates immediately without any manual verification or delay.",
   },
   {
-    q: "How do I access my material after approval?",
-    a: "Simply log in to your account with your email. Your dashboard will show all 5 modules as unlocked, and you can begin studying immediately.",
-  },
-  {
-    q: "Can I share my account?",
-    a: "Access is intended for individual student use to ensure account security and progress consistency.",
-  },
-  {
-    q: "What if I change my device?",
-    a: "You can log in from any web browser on your phone, tablet, or computer using your registered login credentials.",
+    q: "How do I access my material?",
+    a: "After completing payment, log in with your registered email, activate your chosen study device, and begin revising inside the Vault immediately.",
   },
   {
     q: "Can I access the material on my phone?",
-    a: "Yes, the Revision Vault is fully responsive and optimized for mobile reading, making it easy to revise whether you are at your desk or reviewing right outside the exam hall.",
+    a: "Yes. The Revision Vault is fully responsive and optimized for seamless reading on smartphones, tablets, and computers. You can study securely on your chosen device wherever you are.",
   },
   {
-    q: "Who do I contact if payment verification is delayed?",
-    a: "If your verification takes longer than expected, you can reach out through our contact support with your registered email and UTR number for prompt resolution.",
+    q: "How does device security work?",
+    a: "To safeguard study material and account integrity, access is tied securely to your designated study device. This prevents unauthorized sharing and keeps your personal revision progress safe.",
   },
 ];
 
 function Home() {
   const [isScrolled, setIsScrolled] = useState(false);
-  const [heroTilt, setHeroTilt] = useState({ x: 0, y: 0 });
+  const [heroTilt, setHeroTilt] = useState({ rx: 0, ry: 0, tx: 0, ty: 0 });
   const [openFaq, setOpenFaq] = useState(0);
 
   useScrollReveal();
@@ -191,18 +186,22 @@ function Home() {
   const handleHeroMouseMove = (e) => {
     if (typeof window === "undefined") return;
     if (!window.matchMedia("(pointer: fine)").matches) return;
+    if (window.innerWidth <= 768) return;
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const rect = e.currentTarget.getBoundingClientRect();
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
+    // User Requirement 5: Desktop only subtle movement, max 3px translate, max 0.6deg rotate
     setHeroTilt({
-      x: Math.max(-1.5, Math.min(1.5, y * -3)),
-      y: Math.max(-1.5, Math.min(1.5, x * 3)),
+      rx: Math.max(-0.6, Math.min(0.6, y * -1.2)),
+      ry: Math.max(-0.6, Math.min(0.6, x * 1.2)),
+      tx: Math.max(-3, Math.min(3, x * 6)),
+      ty: Math.max(-3, Math.min(3, y * 6)),
     });
   };
 
   const handleHeroMouseLeave = () => {
-    setHeroTilt({ x: 0, y: 0 });
+    setHeroTilt({ rx: 0, ry: 0, tx: 0, ty: 0 });
   };
 
   useEffect(() => {
@@ -224,7 +223,9 @@ function Home() {
 
   return (
     <div className="app paper-texture">
-      {/* --- Minimal Navbar --- */}
+      {/* ==================================================================
+          NAVBAR: Warm Ivory Glass on Scroll, Clean Typography
+          ================================================================== */}
       <header className={`navbar-wrapper ${isScrolled ? "scrolled" : ""}`}>
         <nav className="navbar" aria-label="Main Navigation">
           <Link className="brand" to="/">
@@ -238,9 +239,10 @@ function Home() {
           <div className="nav-links">
             <a href="#why-this-pack" className="nav-link">Why This Pack</a>
             <a href="#whats-inside" className="nav-link">What's Inside</a>
-            <a href="#sneak-peek" className="nav-link">Preview</a>
+            <a href="#preview" className="nav-link">Preview</a>
             <a href="#revision-flow" className="nav-link">Revision Flow</a>
-            <a href="#how-it-works" className="nav-link">Process</a>
+            <a href="#why-it-works" className="nav-link">Why It Works</a>
+            <a href="#access-process" className="nav-link">Process</a>
             <a href="#faq" className="nav-link">FAQ</a>
           </div>
 
@@ -252,7 +254,7 @@ function Home() {
 
       <main>
         {/* ==================================================================
-            1. HERO SECTION (ONLY PURCHASE CTA ON THE ENTIRE HOMEPAGE)
+            1. HERO SECTION (ONLY PURCHASE CTA ON ENTIRE HOMEPAGE)
             ================================================================== */}
         <section className="hero-section">
           <div className="page-container hero-layout">
@@ -268,7 +270,7 @@ function Home() {
               </h1>
 
               <p className="hero-lede">
-                Everything you need for focused ATP revision — simplified notes, PYQs, important questions and final-hour revision, organised in one place.
+                Everything you need for focused ATP revision — organised into one clear study system.
               </p>
 
               <div className="hero-editorial-callout">
@@ -301,14 +303,17 @@ function Home() {
               onMouseMove={handleHeroMouseMove}
               onMouseLeave={handleHeroMouseLeave}
               style={{
-                transform: heroTilt.x || heroTilt.y ? `perspective(1000px) rotateX(${heroTilt.x}deg) rotateY(${heroTilt.y}deg)` : undefined,
-                transition: "transform 0.3s cubic-bezier(0.22, 1, 0.36, 1)",
+                transform:
+                  heroTilt.rx || heroTilt.ry || heroTilt.tx || heroTilt.ty
+                    ? `perspective(1000px) translate3d(${heroTilt.tx}px, ${heroTilt.ty}px, 0) rotateX(${heroTilt.rx}deg) rotateY(${heroTilt.ry}deg)`
+                    : undefined,
+                transition: "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1)",
               }}
             >
-              {/* Soft ambient warm gold light behind book */}
+              {/* Soft ambient warm gold glow behind book */}
               <div className="ambient-glow" aria-hidden="true"></div>
 
-              {/* Soft ground ellipse beneath book */}
+              {/* Ground shadow beneath book */}
               <div className="book-ground-shadow" aria-hidden="true"></div>
 
               <img
@@ -317,7 +322,7 @@ function Home() {
                 className="hero-book-img"
               />
 
-              {/* Only TWO Floating Academic Paper Tabs: Clean & Editorial */}
+              {/* Floating Academic Paper Tabs */}
               <div className="paper-tab tab-notes" aria-label="Simplified Notes">
                 <span className="tab-tag-icon">📘</span>
                 <span>Simplified Notes</span>
@@ -332,7 +337,7 @@ function Home() {
         </section>
 
         {/* ==================================================================
-            2. WHY THIS PACK EXISTS
+            2. WHY THIS PACK (CONCISE, EMOTIONALLY RELEVANT)
             ================================================================== */}
         <section id="why-this-pack" className="section-editorial problem-section">
           <div className="page-container">
@@ -341,10 +346,7 @@ function Home() {
                 <span className="eyebrow-dot"></span>
                 THE REVISION PROBLEM
               </span>
-              <h2 className="section-title">Revision shouldn't start with searching.</h2>
-              <p className="section-subtitle">
-                When time is short, hunting down scattered material drains energy that belongs to actual study.
-              </p>
+              <h2 className="section-title">Revision shouldn't begin with searching.</h2>
               <div className="gold-divider centered"></div>
             </div>
 
@@ -357,27 +359,15 @@ function Home() {
                 <ul className="problem-list">
                   <li>
                     <span className="bullet-cross">✕</span>
-                    <span>Notes are scattered across WhatsApp groups and chat threads</span>
+                    <span>Scattered notes and random PDFs</span>
                   </li>
                   <li>
                     <span className="bullet-cross">✕</span>
-                    <span>PDFs are stored in different folders and duplicate downloads</span>
+                    <span>Too much material, not enough time</span>
                   </li>
                   <li>
                     <span className="bullet-cross">✕</span>
-                    <span>Textbook notes are too large and unfocused for last-minute revision</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>PYQs are separated from study material, requiring constant switching</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Students don't know what to revise first or what syllabus parts matter most</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Important topics are mixed with low-priority, low-weightage content</span>
+                    <span>No clear order for what to revise first</span>
                   </li>
                 </ul>
               </div>
@@ -388,17 +378,14 @@ function Home() {
                   <h3>The Vault Solution</h3>
                 </div>
                 <p className="solution-lead">
-                  ATP Revision Vault brings each revision resource into one organised study flow.
-                </p>
-                <p className="solution-desc">
-                  Instead of collecting random files the night before your exam, you open a single, structured workspace where every document is written, condensed, and tagged for a specific revision stage.
+                  ATP Revision Vault turns scattered material into one focused revision path.
                 </p>
                 <div className="solution-pillars">
                   <div className="solution-pillar">
                     <span className="pillar-num">01</span>
                     <div>
                       <strong>Single-Source Access</strong>
-                      <span>Zero searching across groups or shared drives.</span>
+                      <span>Zero searching across chat groups or folders.</span>
                     </div>
                   </div>
                   <div className="solution-pillar">
@@ -412,7 +399,7 @@ function Home() {
                     <span className="pillar-num">03</span>
                     <div>
                       <strong>Sequence-Driven Flow</strong>
-                      <span>Always know what to study next without confusion.</span>
+                      <span>Open one place. Know what to revise next.</span>
                     </div>
                   </div>
                 </div>
@@ -422,7 +409,7 @@ function Home() {
         </section>
 
         {/* ==================================================================
-            3. WHAT'S INSIDE (EDUCATIONAL, NO PROMOTIONAL BUTTONS)
+            3. WHAT'S INSIDE (5 CARDS ONLY, 1 SENTENCE EACH, NO WHY BOX)
             ================================================================== */}
         <section id="whats-inside" className="section-editorial features-section">
           <div className="page-container">
@@ -439,7 +426,7 @@ function Home() {
             </div>
 
             <div className="features-grid">
-              {RESOURCE_MODULES.map((item, index) => (
+              {WHATS_INSIDE_MODULES.map((item, index) => (
                 <div className={`chapter-card reveal-init stagger-${index + 1}`} key={item.num}>
                   <div className="bookmark-ribbon" aria-hidden="true"></div>
                   <div className="chapter-card-top">
@@ -448,10 +435,6 @@ function Home() {
                   </div>
                   <h3>{item.title}</h3>
                   <p>{item.desc}</p>
-                  <div className="chapter-purpose-box">
-                    <span className="chapter-purpose-label">WHY IT'S USEFUL</span>
-                    <span className="chapter-purpose-text">{item.why}</span>
-                  </div>
                 </div>
               ))}
             </div>
@@ -459,28 +442,29 @@ function Home() {
         </section>
 
         {/* ==================================================================
-            4. REAL PREVIEW SECTION (NON-PROMOTIONAL, CURIOSITY-DRIVEN)
+            4. REAL PREVIEW SECTION (3 CARDS ONLY, CURIOSITY-DRIVEN)
             ================================================================== */}
-        <section id="sneak-peek" className="section-editorial sneak-peek-section">
+        <section id="preview" className="section-editorial sneak-peek-section">
+          <div id="sneak-peek" className="anchor-shim" aria-hidden="true"></div>
           <div className="page-container">
             <div className="section-header centered reveal-init">
               <span className="eyebrow eyebrow-blue">
                 <span className="eyebrow-dot"></span>
                 AUTHENTIC SAMPLES
               </span>
-              <h2 className="section-title">See how the material is actually structured.</h2>
+              <h2 className="section-title">A small look inside the Vault.</h2>
               <p className="section-subtitle">
-                Not random screenshots — a small look at how each resource is organised.
+                Enough to see the structure. The full material stays inside.
               </p>
               <div className="gold-divider centered"></div>
             </div>
 
-            <div className="peek-grid">
+            <div className="peek-grid peek-grid-three">
               {/* Preview 1: Simplified Notes */}
               <article className="peek-card reveal-init stagger-1">
                 <div className="peek-card-header">
                   <span className="peek-tag">SIMPLIFIED NOTES</span>
-                  <span className="peek-badge">CHAPTER 02</span>
+                  <span className="peek-badge">Important topic</span>
                 </div>
                 <h3 className="peek-title">Control Structures &amp; Branching</h3>
                 <div className="peek-sheet">
@@ -494,36 +478,36 @@ function Home() {
   fallback_routine();
 }`}
                   </div>
-                  <span className="peek-marker">EXAM NOTE</span>
+                  <span className="peek-marker">EXAM PATTERN</span>
                   <p style={{ margin: 0, fontSize: "11px", color: "var(--muted)" }}>
                     Always evaluate nested switch cases for break fall-through.
                   </p>
 
                   <div className="peek-blur-overlay">
-                    <span className="peek-sample-pill">🔒 Sample preview</span>
+                    <span className="peek-sample-pill">🔒 Preview</span>
                   </div>
                 </div>
               </article>
 
-              {/* Preview 2: PYQ Vault */}
+              {/* Preview 2: PYQ Collection */}
               <article className="peek-card reveal-init stagger-2">
                 <div className="peek-card-header">
                   <span className="peek-tag">PYQ COLLECTION</span>
-                  <span className="peek-badge">EXAM 2024</span>
+                  <span className="peek-badge">Exam pattern</span>
                 </div>
                 <h3 className="peek-title">Verified Previous Questions</h3>
                 <div className="peek-sheet">
                   <div className="peek-pyq-item">
                     <strong>Q1. Compare static vs dynamic binding.</strong>
-                    <span>[Repeated 3 times • 5 Marks]</span>
+                    <span>[Core concept • 5 Marks]</span>
                   </div>
                   <div className="peek-pyq-item">
                     <strong>Q2. Explain stack frame lifecycle during recursion.</strong>
-                    <span>[Important Pattern • 7 Marks]</span>
+                    <span>[Sample layout • 7 Marks]</span>
                   </div>
 
                   <div className="peek-blur-overlay">
-                    <span className="peek-sample-pill">🔒 Example layout</span>
+                    <span className="peek-sample-pill">🔒 Preview</span>
                   </div>
                 </div>
               </article>
@@ -532,7 +516,7 @@ function Home() {
               <article className="peek-card reveal-init stagger-3">
                 <div className="peek-card-header">
                   <span className="peek-tag">LAST-MINUTE REVISION</span>
-                  <span className="peek-badge">FINAL HOUR</span>
+                  <span className="peek-badge">Quick checkpoint</span>
                 </div>
                 <h3 className="peek-title">High-Yield Memory Trigger</h3>
                 <div className="peek-sheet">
@@ -546,34 +530,7 @@ function Home() {
                   </p>
 
                   <div className="peek-blur-overlay">
-                    <span className="peek-sample-pill">🔒 Preview of study format</span>
-                  </div>
-                </div>
-              </article>
-
-              {/* Preview 4: Important Questions */}
-              <article className="peek-card reveal-init stagger-4">
-                <div className="peek-card-header">
-                  <span className="peek-tag">IMPORTANT QUESTIONS</span>
-                  <span className="peek-badge">HIGH PROBABILITY</span>
-                </div>
-                <h3 className="peek-title">Curated Topic Weightage</h3>
-                <div className="peek-sheet">
-                  <div className="peek-priority-item">
-                    <span>Memory Allocation &amp; Pointers</span>
-                    <b>92% High Yield</b>
-                  </div>
-                  <div className="peek-priority-item">
-                    <span>Interrupt Service Routines</span>
-                    <b>88% High Yield</b>
-                  </div>
-                  <div className="peek-priority-item">
-                    <span>File Handling &amp; Buffers</span>
-                    <b>76% Expected</b>
-                  </div>
-
-                  <div className="peek-blur-overlay">
-                    <span className="peek-sample-pill">🔒 Sample preview</span>
+                    <span className="peek-sample-pill">🔒 Preview</span>
                   </div>
                 </div>
               </article>
@@ -582,7 +539,7 @@ function Home() {
         </section>
 
         {/* ==================================================================
-            5. THE REVISION FLOW (NO CTA)
+            5. REVISION FLOW (THE LEARNING STORY)
             ================================================================== */}
         <section id="revision-flow" className="section-editorial system-section">
           <div className="page-container">
@@ -591,9 +548,9 @@ function Home() {
                 <span className="eyebrow-dot"></span>
                 THE REVISION BLUEPRINT
               </span>
-              <h2 className="section-title">Built around how you actually revise.</h2>
+              <h2 className="section-title">One clear path from learning to recall.</h2>
               <p className="section-subtitle">
-                "Instead of jumping between unrelated files, move through the material depending on what stage of revision you're in."
+                Move through the material in sequence — from building understanding to quick recall before your exam.
               </p>
               <div className="gold-divider centered"></div>
             </div>
@@ -615,213 +572,96 @@ function Home() {
         </section>
 
         {/* ==================================================================
-            6. WHY ORGANISATION MATTERS (NO BUTTON)
+            6. WHY IT WORKS (COMPACT 4 VALUE POINTS)
             ================================================================== */}
-        <section id="organisation" className="section-editorial compare-section">
+        <section id="why-it-works" className="section-editorial why-it-works-section">
           <div className="page-container">
             <div className="section-header centered reveal-init">
-              <span className="eyebrow">
-                <span className="eyebrow-dot"></span>
-                THE REVISION DIFFERENCE
-              </span>
-              <h2 className="section-title">When the exam is close, organisation matters.</h2>
-              <p className="section-subtitle">
-                When time is short, the way your material is organised decides how calmly you revise.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="comparison-box">
-              <div className="compare-col compare-col-muted reveal-init reveal-left">
-                <span className="compare-label compare-label-red">SCATTERED REVISION</span>
-                <h3 className="compare-heading">Scattered &amp; Disorienting</h3>
-                <ul className="compare-list">
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Random PDFs</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Searching WhatsApp</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Long notes</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Different sources</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>No clear order</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="compare-col compare-col-bright reveal-init reveal-right">
-                <span className="compare-label compare-label-green">ATP REVISION SYSTEM</span>
-                <h3 className="compare-heading">Organised &amp; Exam-Ready</h3>
-                <ul className="compare-list">
-                  <li>
-                    <span className="bullet-check">✓</span>
-                    <span>Material grouped by purpose</span>
-                  </li>
-                  <li>
-                    <span className="bullet-check">✓</span>
-                    <span>Notes ready to revise</span>
-                  </li>
-                  <li>
-                    <span className="bullet-check">✓</span>
-                    <span>PYQs easy to locate</span>
-                  </li>
-                  <li>
-                    <span className="bullet-check">✓</span>
-                    <span>Important topics separated</span>
-                  </li>
-                  <li>
-                    <span className="bullet-check">✓</span>
-                    <span>Final-hour resources ready</span>
-                  </li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            7. PRODUCT QUALITY SECTION (NO PRICE, NO CTA)
-            ================================================================== */}
-        <section id="quality" className="section-editorial showcase-section">
-          <div className="page-container showcase-layout">
-            <div className="showcase-visual reveal-init reveal-left">
-              <div className="ambient-glow" aria-hidden="true"></div>
-              <img
-                src={bookImage}
-                alt="ATP Revision Vault Physical & Digital Companion"
-                className="showcase-book-img"
-              />
-            </div>
-
-            <div className="showcase-details reveal-init reveal-right">
               <span className="eyebrow eyebrow-blue">
                 <span className="eyebrow-dot"></span>
-                PRODUCT SPECIFICATION
+                ACADEMIC FOCUS
               </span>
-              <h2 className="section-title">Designed as a revision companion, not a PDF dump.</h2>
+              <h2 className="section-title">Built for focused revision.</h2>
               <p className="section-subtitle">
-                Each section of the pack serves a different stage of revision — from understanding a topic to recalling it shortly before the exam.
+                Designed as a disciplined revision companion, not an unorganized file dump.
               </p>
+              <div className="gold-divider centered"></div>
+            </div>
 
-              <div className="showcase-rows">
-                <div className="showcase-row-item">
-                  <span className="showcase-row-icon">📘</span>
-                  <div className="showcase-row-content">
-                    <strong>Concept clarity</strong>
-                    <span>Digestible summaries that strip away textbook fluff and retain key principles.</span>
+            <div className="why-it-works-grid">
+              {WHY_IT_WORKS_POINTS.map((pt, idx) => (
+                <div className={`why-value-card reveal-init stagger-${idx + 1}`} key={pt.title}>
+                  <div className="why-value-icon">{pt.icon}</div>
+                  <div className="why-value-content">
+                    <h3 className="why-value-title">{pt.title}</h3>
+                    <p className="why-value-desc">{pt.desc}</p>
                   </div>
                 </div>
+              ))}
+            </div>
+          </div>
+        </section>
 
-                <div className="showcase-row-item">
-                  <span className="showcase-row-icon">📝</span>
-                  <div className="showcase-row-content">
-                    <strong>Exam practice</strong>
-                    <span>PYQs indexed by topic with step-by-step guidance on expected answers.</span>
-                  </div>
-                </div>
+        {/* ==================================================================
+            7. CURIOSITY MOMENT & ACCESS PROCESS
+            ================================================================== */}
+        <section id="access-process" className="section-editorial access-section">
+          <div className="page-container">
+            {/* 7a. The Curiosity Moment */}
+            <div className="curiosity-moment-block">
+              <div className="section-header centered reveal-init">
+                <span className="eyebrow eyebrow-gold">
+                  <span className="eyebrow-dot"></span>
+                  CURATED PURPOSE
+                </span>
+                <h2 className="section-title">Everything in the Vault has a reason to be there.</h2>
+                <div className="gold-divider centered"></div>
+              </div>
 
-                <div className="showcase-row-item">
-                  <span className="showcase-row-icon">🎯</span>
-                  <div className="showcase-row-content">
-                    <strong>Priority revision</strong>
-                    <span>Curated list of repeated question concepts so you maximise mark efficiency.</span>
+              <div className="curiosity-grid">
+                {CURIOSITY_CARDS.map((card, idx) => (
+                  <div className={`curiosity-card reveal-init stagger-${idx + 1}`} key={card.phase}>
+                    <span className="curiosity-phase">{card.phase}</span>
+                    <h3 className="curiosity-tagline">"{card.tagline}"</h3>
+                    <p className="curiosity-subtext">{card.subtext}</p>
                   </div>
-                </div>
+                ))}
+              </div>
+            </div>
 
-                <div className="showcase-row-item">
-                  <span className="showcase-row-icon">⚡</span>
-                  <div className="showcase-row-content">
-                    <strong>Final-hour preparation</strong>
-                    <span>Condensed bullet sheets and high-yield triggers built for the night before.</span>
-                  </div>
-                </div>
+            {/* 7b. The Automated 5-Step Access Process */}
+            <div className="access-process-block">
+              <div className="section-header centered reveal-init" style={{ marginTop: "72px" }}>
+                <span className="eyebrow">
+                  <span className="eyebrow-dot"></span>
+                  AUTOMATED ACCESS
+                </span>
+                <h2 className="section-title">Simple access. Clear process.</h2>
+                <p className="section-subtitle">
+                  Study securely on your chosen device with instant automated checkout.
+                </p>
+                <div className="gold-divider centered"></div>
+              </div>
 
-                <div className="showcase-row-item">
-                  <span className="showcase-row-icon">🧠</span>
-                  <div className="showcase-row-content">
-                    <strong>Quick recall</strong>
-                    <span>Instant memory recall aids for quick reviews right outside the examination hall.</span>
+              <div className="trust-steps-grid">
+                {ACCESS_STEPS.map((step, idx) => (
+                  <div className={`trust-step-card reveal-init stagger-${idx + 1}`} key={step.num}>
+                    <div className="trust-step-num-badge">{step.num}</div>
+                    <span className="trust-step-icon">{step.icon}</span>
+                    <h4>{step.title}</h4>
+                    <p>{step.desc}</p>
+                    {idx < ACCESS_STEPS.length - 1 && (
+                      <div className="trust-step-connector" aria-hidden="true">→</div>
+                    )}
                   </div>
-                </div>
+                ))}
               </div>
             </div>
           </div>
         </section>
 
         {/* ==================================================================
-            8. WHAT THE STUDENT GETS (FACTUAL CARDS, NO CTA)
-            ================================================================== */}
-        <section id="student-gets" className="section-editorial facts-section">
-          <div className="page-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow">
-                <span className="eyebrow-dot"></span>
-                AUTHENTIC SPECIFICATION
-              </span>
-              <h2 className="section-title">One organised place for ATP revision.</h2>
-              <p className="section-subtitle">
-                Clean, verified study resources curated specifically for your syllabus.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="facts-grid-seven">
-              {WHAT_STUDENT_GETS.map((item, index) => (
-                <div className={`fact-card reveal-init stagger-${(index % 3) + 1}`} key={item.title}>
-                  <div className="fact-card-icon">{item.icon}</div>
-                  <h4>{item.title}</h4>
-                  <p>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            9. TRUST SECTION: SIMPLE ACCESS. CLEAR PROCESS. (NO CTA)
-            ================================================================== */}
-        <section id="how-it-works" className="section-editorial trust-section">
-          <div className="page-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow eyebrow-gold">
-                <span className="eyebrow-dot"></span>
-                ACCESS WORKFLOW
-              </span>
-              <h2 className="section-title">Simple access. Clear process.</h2>
-              <p className="section-subtitle">
-                A straightforward five-step process from account creation to your revision material.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="trust-steps-grid">
-              {TRUST_STEPS.map((step, idx) => (
-                <div className={`trust-step-card reveal-init stagger-${idx + 1}`} key={step.num}>
-                  <div className="trust-step-num-badge">{step.num}</div>
-                  <span className="trust-step-icon">{step.icon}</span>
-                  <h4>{step.title}</h4>
-                  <p>{step.desc}</p>
-                  {idx < TRUST_STEPS.length - 1 && (
-                    <div className="trust-step-connector" aria-hidden="true">→</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            10. FAQ SECTION (ACCORDION INTERACTIONS, NO CTA)
+            8. FAQ SECTION (SMOOTH ACCORDION, AUTOMATED PAYMENT & SECURITY)
             ================================================================== */}
         <section id="faq" className="section-editorial faq-section">
           <div className="page-container faq-container">
@@ -832,7 +672,7 @@ function Home() {
               </span>
               <h2 className="section-title">Frequently Asked Questions</h2>
               <p className="section-subtitle">
-                Clear answers about the pack, payment verification, and how to access your study materials.
+                Clear answers about the pack, automatic activation, and how to access your study materials.
               </p>
               <div className="gold-divider centered"></div>
             </div>
@@ -849,9 +689,7 @@ function Home() {
                       aria-expanded={isOpen}
                     >
                       <span>{item.q}</span>
-                      <span className="faq-icon-bubble" aria-hidden="true">
-                        {isOpen ? "✕" : "+"}
-                      </span>
+                      <span className="faq-icon-bubble" aria-hidden="true">+</span>
                     </button>
                     {isOpen && (
                       <div className="faq-answer">
@@ -867,7 +705,7 @@ function Home() {
       </main>
 
       {/* ==================================================================
-          11. MINIMAL FOOTER (NO PURCHASE CTA)
+          9. MINIMAL FOOTER (NO PURCHASE CTA)
           ================================================================== */}
       <footer className="site-footer">
         <div className="footer-content">
@@ -881,8 +719,10 @@ function Home() {
 
           <div className="footer-links">
             <a href="#whats-inside">What's Inside</a>
-            <a href="#sneak-peek">Preview</a>
+            <a href="#preview">Preview</a>
             <a href="#why-this-pack">Why This Pack</a>
+            <a href="#revision-flow">Revision Flow</a>
+            <a href="#why-it-works">Why It Works</a>
             <a href="#faq">FAQ</a>
             <Link to="/login">Login</Link>
           </div>
