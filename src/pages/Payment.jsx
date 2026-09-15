@@ -47,6 +47,29 @@ function Payment() {
       }
 
       setCheckingUser(false);
+
+      setUser(data.user);
+
+      // Check if user already has an active entitlement
+      try {
+        const { data: ent } = await supabase
+          .from("entitlements")
+          .select("*")
+          .eq("user_id", data.user.id)
+          .eq("product_id", "atp_complete")
+          .eq("status", "active")
+          .maybeSingle();
+
+        if (ent) {
+          // Already purchased and active, redirect straight to dashboard
+          navigate("/dashboard", { replace: true });
+          return;
+        }
+      } catch (err) {
+        console.warn("Entitlement check fallback:", err);
+      }
+
+      setCheckingUser(false);
     }
 
     checkUserAndEntitlement();

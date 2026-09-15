@@ -39,7 +39,7 @@ function Signup() {
       return;
     }
 
-    navigate("/payment");
+    navigate("/student-dashboard");
   }
 
   return (

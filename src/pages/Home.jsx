@@ -247,7 +247,7 @@ function Home() {
           </div>
 
           <div className="nav-actions">
-            <Link className="nav-login-btn" to="/login">Login</Link>
+            <Link className="nav-login-btn" to="/login" aria-label="Login to your account">Login</Link>
           </div>
         </nav>
       </header>
@@ -281,10 +281,10 @@ function Home() {
               </div>
 
               <div className="hero-actions">
-                <Link to="/signup" className="btn-primary hero-cta-btn">
+                <Link to="/signup" className="btn-primary hero-cta-btn" aria-label="Get the complete ATP revision pack for ₹49">
                   GET THE COMPLETE PACK — <span className="cta-price-highlight">₹49</span> <span className="cta-arrow" aria-hidden="true">→</span>
                 </Link>
-                <a href="#why-this-pack" className="btn-secondary hero-secondary-btn">
+                <a href="#why-this-pack" className="btn-secondary hero-secondary-btn" aria-label="Explore what's inside the revision pack">
                   Explore What's Inside <span aria-hidden="true">↓</span>
                 </a>
               </div>
@@ -427,10 +427,10 @@ function Home() {
 
             <div className="features-grid">
               {WHATS_INSIDE_MODULES.map((item, index) => (
-                <div className={`chapter-card reveal-init stagger-${index + 1}`} key={item.num}>
+                <div className={`chapter-card reveal-init stagger-${index + 1}`} key={item.num} role="article">
                   <div className="bookmark-ribbon" aria-hidden="true"></div>
                   <div className="chapter-card-top">
-                    <span className="chapter-num">{item.num}</span>
+                    <span className="chapter-num" aria-hidden="true">{item.num}</span>
                     <span className="chapter-badge">{item.tag}</span>
                   </div>
                   <h3>{item.title}</h3>
@@ -590,8 +590,8 @@ function Home() {
 
             <div className="why-it-works-grid">
               {WHY_IT_WORKS_POINTS.map((pt, idx) => (
-                <div className={`why-value-card reveal-init stagger-${idx + 1}`} key={pt.title}>
-                  <div className="why-value-icon">{pt.icon}</div>
+                <div className={`why-value-card reveal-init stagger-${idx + 1}`} key={pt.title} role="article">
+                  <div className="why-value-icon" aria-hidden="true">{pt.icon}</div>
                   <div className="why-value-content">
                     <h3 className="why-value-title">{pt.title}</h3>
                     <p className="why-value-desc">{pt.desc}</p>
@@ -645,9 +645,9 @@ function Home() {
 
               <div className="trust-steps-grid">
                 {ACCESS_STEPS.map((step, idx) => (
-                  <div className={`trust-step-card reveal-init stagger-${idx + 1}`} key={step.num}>
-                    <div className="trust-step-num-badge">{step.num}</div>
-                    <span className="trust-step-icon">{step.icon}</span>
+                  <div className={`trust-step-card reveal-init stagger-${idx + 1}`} key={step.num} role="listitem">
+                    <div className="trust-step-num-badge" aria-hidden="true">{step.num}</div>
+                    <span className="trust-step-icon" aria-hidden="true">{step.icon}</span>
                     <h4>{step.title}</h4>
                     <p>{step.desc}</p>
                     {idx < ACCESS_STEPS.length - 1 && (
@@ -677,22 +677,24 @@ function Home() {
               <div className="gold-divider centered"></div>
             </div>
 
-            <div className="faq-list">
+            <div className="faq-list" role="list">
               {FAQ_ITEMS.map((item, index) => {
                 const isOpen = openFaq === index;
                 return (
-                  <div className={`faq-item ${isOpen ? "open" : ""}`} key={item.q}>
+                  <div className={`faq-item ${isOpen ? "open" : ""}`} key={item.q} role="listitem">
                     <button
                       type="button"
                       className="faq-question"
                       onClick={() => toggleFaq(index)}
                       aria-expanded={isOpen}
+                      aria-controls={`faq-answer-${index}`}
+                      id={`faq-question-${index}`}
                     >
                       <span>{item.q}</span>
-                      <span className="faq-icon-bubble" aria-hidden="true">+</span>
+                      <span className="faq-icon-bubble" aria-hidden="true">{isOpen ? '−' : '+'}</span>
                     </button>
                     {isOpen && (
-                      <div className="faq-answer">
+                      <div className="faq-answer" id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`}>
                         <p>{item.a}</p>
                       </div>
                     )}
@@ -725,6 +727,10 @@ function Home() {
             <a href="#why-it-works">Why It Works</a>
             <a href="#faq">FAQ</a>
             <Link to="/login">Login</Link>
+            <Link to="/privacy">Privacy</Link>
+            <Link to="/terms">Terms</Link>
+            <Link to="/refund">Refund</Link>
+            <Link to="/support">Support</Link>
           </div>
 
           <p style={{ margin: 0 }}>

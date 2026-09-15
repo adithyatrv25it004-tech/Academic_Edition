@@ -4,6 +4,7 @@ import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { getSupabaseAdmin } from '../_shared/supabaseAdmin.ts';
 
 const EXPECTED_AMOUNT_PAISE = 4900;
+const EXPECTED_CURRENCY = 'INR';
 const PRODUCT_ID = 'atp_complete';
 
 // Verify HMAC-SHA256 signature
@@ -73,6 +74,7 @@ serve(async (req: Request) => {
     const gatewayOrderId = paymentEntity?.order_id || orderEntity?.id;
     const gatewayPaymentId = paymentEntity?.id;
     const amount = paymentEntity?.amount || orderEntity?.amount;
+    const currency = paymentEntity?.currency || orderEntity?.currency;
 
     if (!gatewayOrderId) {
       console.warn('No order_id found in payment payload');
@@ -83,6 +85,19 @@ serve(async (req: Request) => {
     if (amount !== EXPECTED_AMOUNT_PAISE) {
       console.error(`Amount mismatch: expected ${EXPECTED_AMOUNT_PAISE}, got ${amount}`);
       return new Response('Amount mismatch recorded', { status: 200 });
+    }
+
+    // Verify currency is INR
+    if (currency !== EXPECTED_CURRENCY) {
+      console.error(`Currency mismatch: expected ${EXPECTED_CURRENCY}, got ${currency}`);
+      return new Response('Currency mismatch recorded', { status: 200 });
+    }
+
+    // Verify payment status is actually captured/paid
+    const paymentStatus = paymentEntity?.status;
+    if (paymentStatus !== 'captured' && paymentStatus !== 'authorized') {
+      console.warn(`Payment status not valid: ${paymentStatus}`);
+      return new Response('Payment not completed', { status: 200 });
     }
 
     const supabaseAdmin = getSupabaseAdmin();

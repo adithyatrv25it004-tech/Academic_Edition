@@ -5,6 +5,12 @@ import Login from "./pages/Login";
 import VerifyOtp from "./pages/VerifyOtp";
 import Payment from "./pages/Payment";
 import Vault from "./pages/Vault";
+import DeviceActivation from "./pages/DeviceActivation";
+import StudentDashboard from "./pages/StudentDashboard";
+import Privacy from "./pages/Privacy";
+import Terms from "./pages/Terms";
+import Refund from "./pages/Refund";
+import Support from "./pages/Support";
 
 function App() {
   return (
@@ -15,8 +21,14 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/verify-otp" element={<VerifyOtp />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/student-dashboard" element={<StudentDashboard />} />
+        <Route path="/device-activation" element={<DeviceActivation />} />
         <Route path="/vault" element={<Vault />} />
         <Route path="/dashboard" element={<Vault />} />
+        <Route path="/privacy" element={<Privacy />} />
+        <Route path="/terms" element={<Terms />} />
+        <Route path="/refund" element={<Refund />} />
+        <Route path="/support" element={<Support />} />
       </Routes>
     </BrowserRouter>
   );

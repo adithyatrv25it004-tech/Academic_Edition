@@ -207,9 +207,9 @@ function VerifyOtp({ email: propEmail, onBack }) {
           navigate("/dashboard", { replace: true });
         }, 1200);
       } else {
-        setDestinationNotice("Taking you to checkout...");
+        setDestinationNotice("Taking you to your student dashboard...");
         setTimeout(() => {
-          navigate("/payment", { replace: true });
+          navigate("/student-dashboard", { replace: true });
         }, 1200);
       }
     } catch {

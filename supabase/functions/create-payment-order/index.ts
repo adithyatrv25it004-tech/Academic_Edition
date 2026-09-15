@@ -55,6 +55,28 @@ serve(async (req: Request) => {
       );
     }
 
+    // Check for pending orders in last 5 minutes to prevent duplicates
+    const fiveMinutesAgo = new Date(Date.now() - 5 * 60 * 1000).toISOString();
+    const { data: pendingOrder } = await supabaseAdmin
+      .from('orders')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('product_id', PRODUCT_ID)
+      .eq('status', 'created')
+      .gte('created_at', fiveMinutesAgo)
+      .maybeSingle();
+
+    if (pendingOrder) {
+      return new Response(
+        JSON.stringify({
+          pending_order: true,
+          order_id: pendingOrder.gateway_order_id,
+          message: 'You have a pending order. Please complete or wait for it to expire.',
+        }),
+        { status: 409, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
     // Razorpay Credentials from Edge Secrets
     const razorpayKeyId = Deno.env.get('RAZORPAY_KEY_ID');
     const razorpayKeySecret = Deno.env.get('RAZORPAY_KEY_SECRET');

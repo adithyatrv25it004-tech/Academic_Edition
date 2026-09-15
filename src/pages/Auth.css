@@ -12,6 +12,35 @@
   position: relative;
 }
 
+/* Enhanced button hover effects */
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* Improved input focus states */
+input:focus,
+button:focus {
+  outline: 2px solid var(--blue);
+  outline-offset: 2px;
+}
+
+/* Subtle card hover effects */
+.vault-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+
+.chapter-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+}
+
 /* Subtle background paper pattern */
 .auth-page::before,
 .checkout-page::before,
