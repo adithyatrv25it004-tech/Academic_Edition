@@ -77,8 +77,23 @@ export async function issueDeviceChallenge() {
     headers: { Authorization: `Bearer ${session.access_token}` },
   });
 
-  if (error) throw new Error(error.message || 'Failed to issue device challenge');
-  if (data?.error) throw new Error(data.message || data.error);
+  if (error) {
+    let payload = null;
+    if (error.context && typeof error.context.json === 'function') {
+      try {
+        payload = await error.context.json();
+      } catch {}
+    }
+    const msg = payload?.message || payload?.error || error.message;
+    const err = new Error(msg || 'Failed to issue device challenge');
+    err.code = payload?.error;
+    throw err;
+  }
+  if (data?.error) {
+    const err = new Error(data.message || data.error);
+    err.code = data.error;
+    throw err;
+  }
 
   return data;
 }
@@ -101,8 +116,23 @@ export async function verifyAndStartSession(challengeId, signature, deviceId) {
     body: { challenge_id: challengeId, signature, device_id: deviceId },
   });
 
-  if (error) throw new Error(error.message || 'Device verification failed');
-  if (data?.error) throw new Error(data.message || data.error);
+  if (error) {
+    let payload = null;
+    if (error.context && typeof error.context.json === 'function') {
+      try {
+        payload = await error.context.json();
+      } catch {}
+    }
+    const msg = payload?.message || payload?.error || error.message;
+    const err = new Error(msg || 'Device verification failed');
+    err.code = payload?.error;
+    throw err;
+  }
+  if (data?.error) {
+    const err = new Error(data.message || data.error);
+    err.code = data.error;
+    throw err;
+  }
 
   return data;
 }

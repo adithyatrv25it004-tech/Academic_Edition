@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { CheckmarkAnim } from "./CheckmarkAnim";
+import { playUiBubbleSound } from "../lib/uiBubbleSound";
 import "./Auth.css";
 
 function maskEmail(email) {
@@ -202,7 +203,7 @@ function VerifyOtp({ email: propEmail, onBack }) {
       }
 
       if (hasEntitlement) {
-        setDestinationNotice("Taking you to your Revision Vault...");
+        setDestinationNotice("Taking you to your Python Journey...");
         setTimeout(() => {
           navigate("/dashboard", { replace: true });
         }, 1200);
@@ -257,7 +258,7 @@ function VerifyOtp({ email: propEmail, onBack }) {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>YOUR STUDY PACK AWAITS</span>
           </div>
         </Link>
@@ -266,7 +267,7 @@ function VerifyOtp({ email: propEmail, onBack }) {
           <div className="otp-success-card">
             <CheckmarkAnim size={48} />
             <h3>Email verified ✓</h3>
-            <p>{destinationNotice || "Taking you to your Revision Vault..."}</p>
+            <p>{destinationNotice || "Taking you to your Python Journey..."}</p>
           </div>
         ) : (
           <>
@@ -327,6 +328,7 @@ function VerifyOtp({ email: propEmail, onBack }) {
                 className="auth-btn-submit"
                 type="submit"
                 disabled={!isComplete || loading || isVerified}
+                onClick={playUiBubbleSound}
               >
                 {loading ? (
                   <span style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}>

@@ -2,9 +2,11 @@ import { useEffect, useState, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import { loadRazorpayScript, createPaymentOrder } from "../lib/razorpay";
+import { playPaymentSuccessSound } from "../lib/paymentSuccessSound";
+import { playUiBubbleSound } from "../lib/uiBubbleSound";
 import { CheckmarkAnim } from "./CheckmarkAnim";
 import "./Auth.css";
-import bookThumbnail from "../assets/atp-revision-book.png";
+import bookThumbnail from "../assets/atp-revision-book-cover.png";
 
 function Payment() {
   const navigate = useNavigate();
@@ -15,6 +17,7 @@ function Payment() {
   const [isUnlocked, setIsUnlocked] = useState(false);
   const [paymentError, setPaymentError] = useState("");
   const pollTimerRef = useRef(null);
+  const successSoundPlayedRef = useRef(false);
 
   useEffect(() => {
     async function checkUserAndEntitlement() {
@@ -84,10 +87,15 @@ function Payment() {
           setIsConfirming(false);
           setIsUnlocked(true);
 
-          // Give student a brief visual confirmation before entering dashboard
+          if (!successSoundPlayedRef.current) {
+            successSoundPlayedRef.current = true;
+            playPaymentSuccessSound();
+          }
+
+          // Give student a brief visual confirmation before entering device activation
           setTimeout(() => {
-            navigate("/dashboard", { replace: true });
-          }, 1400);
+            navigate("/device-activation", { replace: true });
+          }, 1200);
           return;
         }
       } catch (err) {
@@ -113,6 +121,7 @@ function Payment() {
 
     setIsProcessing(true);
     setPaymentError("");
+    successSoundPlayedRef.current = false;
 
     try {
       // 1. Ensure Razorpay script is loaded
@@ -147,8 +156,8 @@ function Payment() {
         key: razorpayKey,
         amount: orderData.amount, // 4900 paise
         currency: orderData.currency || "INR",
-        name: "ATP Revision Vault",
-        description: "ATP Complete Revision Pack (One-Time Access)",
+        name: "ATP Python Journey",
+        description: "ATP Python Journey (One-Time Access)",
         image: bookThumbnail,
         order_id: orderData.order_id,
         prefill: {
@@ -208,7 +217,7 @@ function Payment() {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>Academic Checkout</span>
           </div>
         </Link>
@@ -223,10 +232,10 @@ function Payment() {
           <div className="checkout-header">
             <span className="auth-eyebrow">AUTOMATED INSTANT ACTIVATION</span>
             <h1 className="checkout-heading">
-              You're one step away from your Revision Vault.
+              You're one step away from your Python Journey.
             </h1>
             <p className="checkout-subtext">
-              Complete the one-time payment of ₹49. Your personal revision dashboard unlocks automatically upon verification.
+              Complete the one-time payment of ₹49. Your personal learning dashboard unlocks automatically upon verification.
             </p>
           </div>
 
@@ -246,7 +255,7 @@ function Payment() {
             </div>
             <div className={`step-item ${isUnlocked ? "completed active" : ""}`}>
               <div className="step-num">4</div>
-              <span className="step-name">Vault Unlocked</span>
+              <span className="step-name">Journey Unlocked</span>
             </div>
           </div>
 
@@ -255,12 +264,12 @@ function Payment() {
             <div className="product-summary-left">
               <img
                 src={bookThumbnail}
-                alt="ATP Complete Revision Pack"
+                alt="ATP Python Journey"
                 className="checkout-book-thumb"
               />
               <div className="product-summary-details">
-                <strong>ATP Complete Revision Pack</strong>
-                <span>Simplified Notes • PYQs • Last-Minute • Important Questions • Quick Recall</span>
+                <strong>ATP Python Journey</strong>
+                <span>Interactive Learning • Visualizers • Python Environment</span>
               </div>
             </div>
             <div className="checkout-price-badge">
@@ -273,13 +282,13 @@ function Payment() {
           {isUnlocked ? (
             <div className="utr-success-box" style={{ borderColor: "var(--green)" }}>
               <CheckmarkAnim size={48} />
-              <h3 style={{ color: "var(--green)" }}>Revision Vault Unlocked ✓</h3>
+              <h3 style={{ color: "var(--green)" }}>✓ Payment Verified</h3>
               <p>
-                Your ₹49 payment has been verified by the server. Opening your study dashboard now...
+                Your ATP Python Journey is unlocked. Preparing your device activation setup...
               </p>
               <div style={{ marginTop: "18px" }}>
                 <Link to="/dashboard" className="btn-verify-access" style={{ width: "auto", textDecoration: "none" }}>
-                  ENTER YOUR REVISION VAULT →
+                  START YOUR PYTHON JOURNEY →
                 </Link>
               </div>
             </div>
@@ -288,19 +297,19 @@ function Payment() {
               <div className="payment-spinner" aria-hidden="true"></div>
               <h3>Payment received.</h3>
               <p className="payment-confirming-subtext">
-                We're confirming your access securely with the server. Your vault will unlock in just a few seconds...
+                We're confirming your access securely with the server. Your Python Journey will unlock in just a few seconds...
               </p>
               <span className="payment-confirming-badge">● Verifying Entitlement</span>
             </div>
           ) : (
             <div className="scan-pay-card">
               <div className="scan-pay-title">
-                <span>⚡</span>
+                <span className="scan-pay-title-icon" aria-hidden="true">⚡</span>
                 <span>Instant UPI &amp; Online Payment</span>
               </div>
 
-              <p style={{ fontSize: "13px", color: "var(--muted-brown)", margin: "0 0 20px" }}>
-                Pay safely using any UPI app (Google Pay, PhonePe, Paytm, BHIM) or Credit/Debit Card via Razorpay.
+              <p className="scan-pay-subtitle">
+                Pay securely using UPI, cards, or netbanking through Razorpay.
               </p>
 
               {/* Payment Methods Badges */}
@@ -320,29 +329,44 @@ function Payment() {
               )}
 
               {/* Main Automated Action Button */}
-              <button
-                type="button"
-                className="btn-checkout-primary"
-                onClick={handleStartPayment}
-                disabled={isProcessing}
-                style={{ marginTop: "16px" }}
-              >
-                {isProcessing ? "INITIALIZING SECURE CHECKOUT..." : "PAY ₹49 WITH UPI / CARD →"}
-              </button>
+              <div className="checkout-cta-wrapper">
+                <button
+                  id="btn-unlock-access"
+                  type="button"
+                  className="btn-checkout-premium"
+                  onClick={(e) => {
+                    playUiBubbleSound();
+                    handleStartPayment(e);
+                  }}
+                  disabled={isProcessing}
+                  aria-label="Unlock Full Access for 49 Rupees"
+                >
+                  <span className="btn-checkout-shine" aria-hidden="true"></span>
+                  <span className="btn-checkout-content">
+                    {isProcessing ? (
+                      <>
+                        <span className="payment-btn-spinner" aria-hidden="true"></span>
+                        <span>INITIALIZING SECURE CHECKOUT...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span className="btn-text">Unlock Full Access — ₹49</span>
+                        <span className="btn-arrow" aria-hidden="true">→</span>
+                      </>
+                    )}
+                  </span>
+                </button>
+              </div>
 
               <div className="checkout-trust-guarantee">
-                <span>🔒 256-bit Encrypted</span>
-                <span>•</span>
-                <span>Trusted Server-Side Activation</span>
-                <span>•</span>
-                <span>One-Time Fee</span>
+                🔒 256-bit encrypted • Secure Razorpay checkout • One-time fee
               </div>
             </div>
           )}
 
           {/* Footer Assistance */}
           <div style={{ marginTop: "24px", textAlign: "center" }}>
-            <Link to="/student-dashboard" style={{ fontSize: "12.5px", color: "var(--muted)", textDecoration: "none" }}>
+            <Link to="/student-dashboard" onClick={playUiBubbleSound} style={{ fontSize: "12.5px", color: "var(--muted)", textDecoration: "none" }}>
               ← Return to dashboard
             </Link>
           </div>

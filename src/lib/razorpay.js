@@ -73,21 +73,51 @@ export async function registerDevice(publicKeyJwk, deviceName) {
     },
   });
 
-  if (error) throw new Error(error.message || "Failed to register device");
+  if (error) {
+    let payload = null;
+    if (error.context && typeof error.context.json === 'function') {
+      try {
+        payload = await error.context.json();
+      } catch {}
+    }
+    if (payload?.error) {
+      return payload;
+    }
+    const msg = payload?.message || payload?.error || error.message;
+    const err = new Error(msg || "Failed to register device");
+    err.code = payload?.error;
+    throw err;
+  }
 
   return data;
 }
 
 /**
- * Calls get-material-access to retrieve short-lived signed Storage URL.
- * Requires an active study session token (x-session-token header).
+ * Calls get-material-access (paid) or get-free-material-access (free) to retrieve short-lived signed Storage URL.
  * @param {string} materialId
  * @param {string} sessionToken - from studySession.getStoredSessionToken()
+ * @param {boolean} isFree - whether the material is marked as free
  */
-export async function getMaterialAccess(materialId, sessionToken) {
+export async function getMaterialAccess(materialId, sessionToken, isFree = false) {
   const { data: sessionData } = await supabase.auth.getSession();
   const session = sessionData?.session;
 
+  if (isFree) {
+    const headers = {};
+    if (session) {
+      headers.Authorization = `Bearer ${session.access_token}`;
+    }
+    
+    const { data, error } = await supabase.functions.invoke("get-free-material-access", {
+      headers,
+      body: { material_id: materialId },
+    });
+
+    if (error) throw error;
+    return data;
+  }
+
+  // PAID FLOW (existing)
   if (!session) {
     throw new Error("Session expired. Please log in again.");
   }
@@ -133,8 +163,24 @@ export async function requestDeviceTransfer(publicKeyJwk, deviceName, reason = "
     },
   });
 
-  if (error) throw new Error(error.message || "Device transfer request failed");
-  if (data?.error) throw new Error(data.message || data.error);
+  if (error) {
+    let payload = null;
+    if (error.context && typeof error.context.json === 'function') {
+      try {
+        payload = await error.context.json();
+      } catch {}
+    }
+    if (payload?.error) {
+      return payload;
+    }
+    const msg = payload?.message || payload?.error || error.message;
+    const err = new Error(msg || "Device transfer request failed");
+    err.code = payload?.error;
+    throw err;
+  }
+  if (data?.error) {
+    return data;
+  }
 
   return data;
 }

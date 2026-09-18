@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
-import bookImage from "../assets/atp-revision-book.png";
 import { useScrollReveal } from "../lib/useScrollReveal";
+import BookScene from "../components/three/BookScene";
+import { playUiBubbleSound } from "../lib/uiBubbleSound";
 import "../App.css";
 import "./Auth.css";
 
@@ -81,7 +82,7 @@ const FAQ_ITEMS = [
   },
   {
     q: "Is ₹49 a one-time payment?",
-    a: "Yes. ₹49 is a one-time fee for full access to the ATP Revision Vault. There are no recurring subscriptions or hidden fees.",
+    a: "Yes. ₹49 is a one-time fee for full access to the ATP Python Journey. There are no recurring subscriptions or hidden fees.",
   },
   {
     q: "How quickly does access activate?",
@@ -160,8 +161,8 @@ function StudentDashboard() {
     const x = (e.clientX - rect.left) / rect.width - 0.5;
     const y = (e.clientY - rect.top) / rect.height - 0.5;
     setHeroTilt({
-      rx: Math.max(-0.5, Math.min(0.5, y * -1)),
-      ry: Math.max(-0.5, Math.min(0.5, x * 1)),
+      rx: Math.max(-3, Math.min(3, y * -6)),
+      ry: Math.max(-4, Math.min(4, x * 8)),
       tx: Math.max(-2, Math.min(2, x * 4)),
       ty: Math.max(-2, Math.min(2, y * 4)),
     });
@@ -194,10 +195,11 @@ function StudentDashboard() {
 
   if (loading) {
     return (
-      <main className="auth-page">
-        <div className="auth-card" style={{ textAlign: "center" }}>
-          <div className="payment-spinner" style={{ margin: "0 auto 16px" }} aria-hidden="true" />
-          <p style={{ color: "var(--muted)", fontWeight: 500 }}>Loading your dashboard...</p>
+      <main className="auth-page" style={{ transition: "opacity 0.3s ease-out" }}>
+        <div className="auth-card" style={{ textAlign: "center", maxWidth: "420px", padding: "32px 24px", margin: "0 auto", boxShadow: "0 4px 12px rgba(0,0,0,0.05)" }}>
+          <div className="payment-spinner" style={{ margin: "0 auto 16px", width: "36px", height: "36px", borderWidth: "3px" }} aria-hidden="true" />
+          <h3 style={{ color: "var(--text)", marginBottom: "6px", fontSize: "1.2rem" }}>Preparing your workspace...</h3>
+          <p style={{ color: "var(--muted)", margin: 0, fontSize: "0.9rem", opacity: 0.85 }}>Loading your Python Journey and progress.</p>
         </div>
       </main>
     );
@@ -211,7 +213,7 @@ function StudentDashboard() {
           <Link className="dashboard-brand" to="/">
             <span className="dashboard-brand-crest">A</span>
             <div className="dashboard-brand-text">
-              <strong>ATP Revision Vault</strong>
+              <strong>ATP Python Journey</strong>
               <span>Academic Edition</span>
             </div>
           </Link>
@@ -222,7 +224,7 @@ function StudentDashboard() {
               <span className="dashboard-status-badge locked">🔒 LOCKED</span>
             </div>
             <div className="dashboard-menu">
-              <button className="dashboard-menu-btn" onClick={handleLogout} aria-label="Logout">
+              <button className="dashboard-menu-btn" onClick={() => { playUiBubbleSound(); handleLogout(); }} aria-label="Logout">
                 Logout
               </button>
             </div>
@@ -237,7 +239,7 @@ function StudentDashboard() {
             <div className="dashboard-hero-content">
               <span className="dashboard-eyebrow">FIRST-YEAR ATP REVISION SYSTEM</span>
               <h1 className="dashboard-hero-heading">
-                Your ATP Revision Vault
+                Your ATP Python Journey
                 <br />
                 <span className="dashboard-hero-accent">is ready.</span>
               </h1>
@@ -254,10 +256,10 @@ function StudentDashboard() {
               </div>
 
               <div className="dashboard-hero-cta">
-                <Link to="/payment" className="dashboard-primary-cta">
+                <Link to="/payment" className="dashboard-primary-cta" onClick={playUiBubbleSound}>
                   UNLOCK THE COMPLETE PACK — <span className="dashboard-price">₹49</span> →
                 </Link>
-                <a href="#whats-included" className="dashboard-secondary-cta">
+                <a href="#whats-included" className="dashboard-secondary-cta" onClick={playUiBubbleSound}>
                   Preview What's Inside ↓
                 </a>
               </div>
@@ -285,7 +287,7 @@ function StudentDashboard() {
             >
               <div className="dashboard-book-glow" aria-hidden="true"></div>
               <div className="dashboard-book-shadow" aria-hidden="true"></div>
-              <img src={bookImage} alt="ATP Revision Vault Complete Study Pack" className="dashboard-book-img" />
+              <BookScene progress={0.08} reducedMotion pointer={{ current: { x: 0, y: 0 } }} />
               
               <div className="dashboard-book-label label-notes">Simplified Notes</div>
               <div className="dashboard-book-label label-pyq">PYQ Collection</div>
@@ -466,7 +468,7 @@ function StudentDashboard() {
             <div className="dashboard-purchase-card reveal-init">
               <div className="dashboard-purchase-header">
                 <span className="dashboard-purchase-badge">FIRST-YEAR EDITION</span>
-                <h2 className="dashboard-purchase-title">ATP Complete Revision Pack</h2>
+                <h2 className="dashboard-purchase-title">ATP Python Journey</h2>
                 <div className="dashboard-purchase-price">₹49</div>
                 <p className="dashboard-purchase-sub">One-time payment</p>
               </div>
@@ -494,7 +496,7 @@ function StudentDashboard() {
                 </div>
               </div>
 
-              <Link to="/payment" className="dashboard-purchase-cta">
+              <Link to="/payment" className="dashboard-purchase-cta" onClick={playUiBubbleSound}>
                 UNLOCK FOR ₹49 →
               </Link>
 
@@ -529,7 +531,7 @@ function StudentDashboard() {
               </div>
               <div className="dashboard-step-card reveal-init stagger-4">
                 <div className="dashboard-step-number">4</div>
-                <h4>Enter the Revision Vault</h4>
+                <h4>Enter the Python Journey</h4>
               </div>
             </div>
           </div>
@@ -620,7 +622,7 @@ function StudentDashboard() {
         <footer className="dashboard-footer">
           <div className="dashboard-footer-content">
             <div className="dashboard-footer-brand">
-              <strong>ATP Revision Vault</strong>
+              <strong>ATP Python Journey</strong>
               <span>Built for the hours that matter most.</span>
             </div>
 

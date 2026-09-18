@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import VerifyOtp from "./VerifyOtp";
+import { playUiBubbleSound } from "../lib/uiBubbleSound";
 import "./Auth.css";
 
 function Login() {
@@ -62,7 +63,7 @@ function Login() {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>YOUR STUDY PACK AWAITS</span>
           </div>
         </Link>
@@ -70,7 +71,7 @@ function Login() {
         <div className="auth-header">
           <span className="auth-eyebrow">ACCOUNT LOGIN</span>
           <h1>Welcome back.</h1>
-          <p>Your revision vault is ready when you are.</p>
+          <p>Your guided Python classroom is ready when you are.</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
@@ -100,7 +101,7 @@ function Login() {
 
           {error && <p className="auth-error">{error}</p>}
 
-          <button className="auth-btn-submit" type="submit" disabled={loading}>
+          <button className="auth-btn-submit" type="submit" disabled={loading} onClick={playUiBubbleSound}>
             {loading ? "Checking account..." : "Sign In →"}
           </button>
         </form>

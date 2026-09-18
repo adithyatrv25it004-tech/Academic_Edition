@@ -8,7 +8,7 @@ function Terms() {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>TERMS OF USE</span>
           </div>
         </Link>
@@ -23,21 +23,21 @@ function Terms() {
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>1. Acceptance of Terms</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              By accessing and using ATP Revision Vault, you agree to these Terms of Use. If you do not agree to these terms, please do not use our service.
+              By accessing and using ATP Python Journey, you agree to these Terms of Use. If you do not agree to these terms, please do not use our service.
             </p>
           </section>
 
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>2. Service Description</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              ATP Revision Vault provides digital study materials for academic revision purposes. The service includes access to simplified notes, previous year questions, revision sheets, and other educational content.
+              ATP Python Journey provides digital study materials for academic revision purposes. The service includes access to simplified notes, previous year questions, revision sheets, and other educational content.
             </p>
           </section>
 
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>3. Personal Study Access</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              Your purchase grants you <strong>personal study access</strong> to the ATP Revision Vault materials. This access is:
+              Your purchase grants you <strong>personal study access</strong> to the ATP Python Journey materials. This access is:
             </p>
             <ul style={{ paddingLeft: "20px", lineHeight: "1.8", color: "var(--muted-brown)" }}>
               <li>For individual, non-commercial use only</li>
@@ -50,7 +50,7 @@ function Terms() {
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>4. Intellectual Property & Content Restrictions</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              All study materials, content, and intellectual property on ATP Revision Vault are protected by copyright law. You agree NOT to:
+              All study materials, content, and intellectual property on ATP Python Journey are protected by copyright law. You agree NOT to:
             </p>
             <ul style={{ paddingLeft: "20px", lineHeight: "1.8", color: "var(--muted-brown)" }}>
               <li>Copy, reproduce, or distribute study materials</li>
@@ -77,7 +77,7 @@ function Terms() {
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>6. Payment Terms</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              The ATP Complete Revision Pack is available for a one-time payment of ₹49. This grants you access to all study materials. There are no recurring subscription charges.
+              The ATP Python Journey is available for a one-time payment of ₹49. This grants you access to all study materials. There are no recurring subscription charges.
             </p>
           </section>
 

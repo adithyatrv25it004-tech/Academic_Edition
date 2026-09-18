@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
+import { playUiBubbleSound } from "../lib/uiBubbleSound";
 import "./Auth.css";
 
 function Signup() {
@@ -48,15 +49,15 @@ function Signup() {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>YOUR STUDY PACK AWAITS</span>
           </div>
         </Link>
 
         <div className="auth-header">
           <span className="auth-eyebrow">CREATE STUDENT ACCOUNT</span>
-          <h1>Start revising better.</h1>
-          <p>Get organised revision material built for your upcoming ATP exam.</p>
+          <h1>Start your Python Journey.</h1>
+          <p>Guided KTU S1 UCEST105 learning built for first-year B.Tech students.</p>
         </div>
 
         <form className="auth-form" onSubmit={handleSubmit}>
@@ -99,7 +100,7 @@ function Signup() {
 
           {error && <p className="auth-error">{error}</p>}
 
-          <button className="auth-btn-submit" type="submit" disabled={loading}>
+          <button className="auth-btn-submit" type="submit" disabled={loading} onClick={playUiBubbleSound}>
             {loading ? "Creating your account..." : "Unlock Access — Proceed to Payment →"}
           </button>
         </form>

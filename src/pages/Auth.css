@@ -4,12 +4,14 @@
 
 .auth-page,
 .checkout-page,
-.vault-page {
+.vault-page,
+.activation-page {
   min-height: 100vh;
   background-color: var(--paper);
   color: var(--text);
   font-family: var(--font-sans);
   position: relative;
+  overflow-x: hidden;
 }
 
 /* Enhanced button hover effects */
@@ -63,12 +65,14 @@ button:focus {
 
 /* --- Common Topbar --- */
 .quiet-topbar {
+  width: min(100% - 24px, 960px);
   max-width: 960px;
   margin: 0 auto;
-  padding: 24px 20px;
+  padding: 24px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   position: relative;
   z-index: 10;
 }
@@ -125,10 +129,11 @@ button:focus {
   position: relative;
   z-index: 2;
   width: min(100%, 450px);
+  max-width: 100%;
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 42px 38px;
+  padding: clamp(24px, 4vw, 42px) clamp(18px, 4vw, 38px);
   box-shadow: var(--shadow-soft);
 }
 
@@ -296,9 +301,10 @@ button:focus {
    QUIET & TRUSTWORTHY CHECKOUT PAGE
    ========================================================================== */
 .checkout-wrapper {
+  width: min(100% - 24px, 680px);
   max-width: 680px;
   margin: 20px auto 80px;
-  padding: 0 20px;
+  padding: 0;
   position: relative;
   z-index: 1;
 }
@@ -307,7 +313,7 @@ button:focus {
   background-color: var(--surface);
   border: 1px solid var(--border);
   border-radius: 12px;
-  padding: 44px 40px;
+  padding: clamp(24px, 4vw, 44px) clamp(18px, 4vw, 40px);
   box-shadow: var(--shadow-soft);
   position: relative;
 }
@@ -347,7 +353,7 @@ button:focus {
 /* 4-Step Progress Stepper */
 .checkout-steps {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   margin-bottom: 34px;
   padding-bottom: 24px;
@@ -404,6 +410,7 @@ button:focus {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   padding: 16px 20px;
   background-color: var(--paper);
   border: 1px solid var(--border);
@@ -453,25 +460,58 @@ button:focus {
   color: var(--muted);
 }
 
-/* Scan & Pay QR Section */
+/* Scan & Pay Card Section */
 .scan-pay-card {
-  background-color: #fffefb;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 24px 20px;
+  background: linear-gradient(180deg, #ffffff 0%, #faf8f5 100%);
+  border: 1px solid rgba(197, 155, 39, 0.22);
+  border-radius: 16px;
+  padding: 32px 28px;
   text-align: center;
-  margin-bottom: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 20px -2px rgba(12, 27, 51, 0.04), 0 1px 3px rgba(12, 27, 51, 0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.scan-pay-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 10%;
+  right: 10%;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(197, 155, 39, 0.5), transparent);
 }
 
 .scan-pay-title {
-  font-size: 13.5px;
+  font-size: 15.5px;
   font-weight: 700;
   color: var(--ink);
-  margin-bottom: 14px;
+  margin-bottom: 6px;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
+  letter-spacing: -0.1px;
+}
+
+.scan-pay-title-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  background-color: rgba(197, 155, 39, 0.12);
+  color: var(--gold);
+  border-radius: 50%;
+  font-size: 11.5px;
+}
+
+.scan-pay-subtitle {
+  font-size: 13px;
+  color: var(--muted-brown);
+  margin: 0 0 18px;
+  line-height: 1.5;
 }
 
 .qr-box {
@@ -870,12 +910,24 @@ button:focus {
 }
 
 @media (max-width: 650px) {
+  .quiet-topbar {
+    width: min(100% - 18px, 960px);
+    padding: 18px 0;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
   .checkout-card {
-    padding: 30px 20px;
+    padding: 24px 18px;
   }
 
   .checkout-steps {
-    gap: 4px;
+    gap: 6px;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .step-item {
+    min-width: 0;
   }
 
   .step-num {
@@ -886,6 +938,35 @@ button:focus {
 
   .step-name {
     font-size: 9.5px;
+    line-height: 1.2;
+  }
+
+  .checkout-product-summary {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .product-summary-left {
+    width: 100%;
+    align-items: flex-start;
+  }
+
+  .checkout-price-badge {
+    width: 100%;
+    text-align: left;
+  }
+
+  .payment-apps-row {
+    justify-content: flex-start;
+  }
+
+  .btn-checkout-premium {
+    min-height: 54px;
+    font-size: 14px;
+  }
+
+  .checkout-cta-wrapper {
+    max-width: none;
   }
 
   .vault-grid {
@@ -896,6 +977,156 @@ button:focus {
     flex-direction: column;
     align-items: flex-start;
     padding: 26px 20px;
+  }
+}
+
+.activation-page {
+  padding-bottom: 32px;
+}
+
+.activation-wrapper {
+  width: min(100% - 24px, 720px);
+  max-width: 720px;
+  margin: 0 auto 40px;
+}
+
+.activation-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: clamp(20px, 4vw, 32px);
+  box-shadow: var(--shadow-soft);
+  overflow: hidden;
+}
+
+.activation-body,
+.activation-loading-state {
+  width: 100%;
+}
+
+.activation-headline {
+  font-family: var(--font-serif);
+  font-size: clamp(24px, 4vw, 32px);
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.6px;
+  margin: 0 0 12px;
+  overflow-wrap: anywhere;
+}
+
+.activation-desc,
+.activation-footnote,
+.activation-step-item {
+  font-size: 13.5px;
+  line-height: 1.6;
+  color: var(--muted-brown);
+}
+
+.activation-success-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--green-light);
+  border: 1px solid rgba(49, 94, 82, 0.2);
+  border-radius: 10px;
+  padding: 16px 18px;
+  margin-bottom: 20px;
+}
+
+.activation-check {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  background: var(--green);
+  color: white;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.activation-device-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  margin: 18px 0 20px;
+}
+
+.activation-device-icon {
+  display: grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 10px;
+  background: var(--blue-light);
+  font-size: 20px;
+  flex-shrink: 0;
+}
+
+.activation-device-preview strong,
+.activation-device-preview span {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+
+.activation-btn {
+  width: 100%;
+  min-height: 52px;
+  margin-top: 8px;
+}
+
+.activation-divider {
+  height: 1px;
+  background: var(--border-light);
+  margin: 18px 0 24px;
+}
+
+.conflict-device-box {
+  border: 1px solid var(--border);
+  background: var(--paper);
+  border-radius: 8px;
+  padding: 12px 14px;
+  margin: 16px 0 18px;
+  overflow-wrap: anywhere;
+}
+
+.activation-steps-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.activation-step-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--paper);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+@media (max-width: 480px) {
+  .activation-card {
+    padding: 18px 14px;
+  }
+
+  .activation-success-banner {
+    align-items: flex-start;
+  }
+
+  .activation-btn {
+    min-height: 48px;
+    font-size: 13px;
+  }
+
+  .activation-footnote {
+    font-size: 12px;
   }
 }
 
@@ -1012,24 +1243,264 @@ button:focus {
   margin: 14px 0 22px;
 }
 
-.pay-app-pill {
-  font-size: 11.5px;
-  font-weight: 600;
-  color: var(--ink);
-  background-color: var(--paper);
-  border: 1px solid var(--border);
-  padding: 5px 12px;
-  border-radius: 6px;
+/* Dimensional checkout treatment */
+.checkout-page {
+  background:
+    radial-gradient(circle at 12% 15%, rgba(242, 228, 189, 0.32), transparent 22rem),
+    radial-gradient(circle at 90% 80%, rgba(49, 92, 140, 0.06), transparent 24rem),
+    var(--paper);
 }
 
+.checkout-card {
+  transform-style: preserve-3d;
+  border-color: rgba(199, 154, 69, 0.45);
+  box-shadow: 0 24px 50px rgba(23, 32, 51, 0.13), 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+}
+
+.checkout-card::after {
+  content: "";
+  position: absolute;
+  inset: 8px -8px -8px 8px;
+  border: 1px solid rgba(199, 154, 69, 0.22);
+  border-radius: inherit;
+  transform: translateZ(-12px);
+  pointer-events: none;
+}
+
+.checkout-product-summary,
+.scan-pay-card {
+  box-shadow: 0 8px 18px rgba(23, 32, 51, 0.055), 0 1px 0 rgba(255, 255, 255, 0.9) inset;
+}
+
+.scan-pay-card {
+  transform: translateZ(5px);
+  border-color: rgba(199, 154, 69, 0.3);
+}
+
+.payment-apps-row {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 24px;
+}
+
+.pay-app-pill {
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--muted);
+  background-color: rgba(12, 27, 51, 0.03);
+  border: 1px solid rgba(12, 27, 51, 0.09);
+  padding: 3.5px 11px;
+  border-radius: 999px;
+  letter-spacing: 0.15px;
+  transition: all 0.2s ease;
+}
+
+.pay-app-pill:hover {
+  background-color: rgba(12, 27, 51, 0.06);
+  color: var(--ink);
+  border-color: rgba(12, 27, 51, 0.16);
+}
+
+/* CTA Wrapper with soft ambient gold/navy glow */
+.checkout-cta-wrapper {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+}
+
+.checkout-cta-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 4px;
+  background: radial-gradient(ellipse at center, rgba(197, 155, 39, 0.2) 0%, rgba(16, 28, 54, 0.18) 50%, transparent 80%);
+  filter: blur(14px);
+  z-index: 0;
+  pointer-events: none;
+  border-radius: 16px;
+  opacity: 0.75;
+  transition: opacity 0.3s ease;
+}
+
+.checkout-cta-wrapper:hover::after {
+  opacity: 1;
+}
+
+/* Primary Luxury Academic CTA Button */
+.btn-checkout-premium {
+  position: relative;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 58px;
+  padding: 0 32px;
+  background: linear-gradient(180deg, #182846 0%, #0a1324 100%);
+  color: #ffffff;
+  font-family: var(--font-sans);
+  font-size: 15.5px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-decoration: none;
+  border: 1px solid rgba(212, 175, 55, 0.45);
+  border-radius: 16px;
+  box-shadow: 
+    0 1px 0 0 rgba(255, 255, 255, 0.14) inset,
+    0 8px 24px -4px rgba(10, 19, 36, 0.4),
+    0 2px 6px -1px rgba(10, 19, 36, 0.2),
+    0 0 0 1px rgba(197, 155, 39, 0.25);
+  cursor: pointer;
+  overflow: hidden;
+  transition: 
+    transform 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    filter 0.22s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.22s ease;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Subtle Top Highlight */
+.btn-checkout-premium::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0) 100%);
+  border-radius: 15px 15px 0 0;
+  pointer-events: none;
+}
+
+/* Subtle hover shimmer */
+.btn-checkout-shine {
+  position: absolute;
+  top: -50%;
+  left: -60%;
+  width: 50%;
+  height: 200%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(212, 175, 55, 0.16) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(25deg);
+  pointer-events: none;
+  transition: left 0.75s ease;
+}
+
+.btn-checkout-premium:hover .btn-checkout-shine {
+  left: 130%;
+}
+
+.btn-checkout-content {
+  position: relative;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.btn-checkout-content .btn-text {
+  color: #ffffff;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.btn-checkout-content .btn-arrow {
+  display: inline-block;
+  font-size: 17px;
+  color: var(--gold-light, #e5c158);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Hover state */
+.btn-checkout-premium:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.04);
+  border-color: rgba(212, 175, 55, 0.7);
+  box-shadow: 
+    0 1px 0 0 rgba(255, 255, 255, 0.18) inset,
+    0 12px 32px -4px rgba(10, 19, 36, 0.48),
+    0 4px 12px -2px rgba(197, 155, 39, 0.25),
+    0 0 0 1px rgba(212, 175, 55, 0.5);
+}
+
+.btn-checkout-premium:hover .btn-arrow {
+  transform: translateX(4px);
+}
+
+/* Active press state */
+.btn-checkout-premium:active {
+  transform: translateY(0) scale(0.985);
+  filter: brightness(0.98);
+  box-shadow: 
+    0 1px 0 0 rgba(0, 0, 0, 0.2) inset,
+    0 4px 14px -2px rgba(10, 19, 36, 0.35),
+    0 0 0 1px rgba(212, 175, 55, 0.4);
+}
+
+/* Focus ring for accessibility */
+.btn-checkout-premium:focus-visible {
+  outline: none;
+  box-shadow: 
+    0 0 0 3px rgba(212, 175, 55, 0.45),
+    0 8px 24px -4px rgba(10, 19, 36, 0.38);
+}
+
+/* Disabled state */
+.btn-checkout-premium:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
+  transform: none !important;
+  box-shadow: 0 4px 12px rgba(10, 19, 36, 0.2);
+}
+
+/* Inline button spinner */
+.payment-btn-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: var(--gold, #c59b27);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  display: inline-block;
+}
+
+/* Trust Microcopy */
 .checkout-trust-guarantee {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 10px;
-  font-size: 11px;
+  gap: 8px;
+  font-size: 11.5px;
+  font-weight: 500;
   color: var(--muted);
   margin-top: 18px;
+  line-height: 1.4;
+  letter-spacing: 0.1px;
+}
+
+@media (max-width: 640px) {
+  .btn-checkout-premium {
+    min-height: 56px;
+    font-size: 14.5px;
+    padding: 0 20px;
+    border-radius: 14px;
+  }
+
+  .checkout-trust-guarantee {
+    font-size: 10.5px;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 }
 
 /* ==========================================================================

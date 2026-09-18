@@ -123,25 +123,28 @@ serve(async (req: Request) => {
     const rzpOrder = await rzpResponse.json();
 
     // Store in Supabase orders table with status 'created'
+    // Uses ONLY valid live public.orders columns:
+    // user_id, product_id, gateway, gateway_order_id, amount_paise, currency, status
     const { error: dbError } = await supabaseAdmin.from('orders').insert([
       {
         user_id: user.id,
         product_id: PRODUCT_ID,
+        gateway: 'razorpay',
         gateway_order_id: rzpOrder.id,
-        amount: 49,
         amount_paise: AMOUNT_PAISE,
         currency: CURRENCY,
         status: 'created',
-        metadata: {
-          receipt: receiptId,
-          user_email: user.email,
-        },
       },
     ]);
 
     if (dbError) {
-      console.error('Failed to record order in DB:', dbError);
-      // Still return the order to avoid blocking the student
+      console.error('Failed to record order in DB:', dbError.message || dbError);
+      // CRITICAL: If the Supabase order insert fails, DO NOT continue checkout.
+      // Return an error and block the payment flow.
+      return new Response(
+        JSON.stringify({ error: 'Failed to record payment order in database. Checkout blocked.' }),
+        { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
     }
 
     // Return safe checkout parameters (NEVER expose key_secret!)
@@ -161,7 +164,7 @@ serve(async (req: Request) => {
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   } catch (err: any) {
-    console.error('Server error in create-payment-order:', err);
+    console.error('Server error in create-payment-order:', err.message || err);
     return new Response(
       JSON.stringify({ error: err.message || 'Internal server error' }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

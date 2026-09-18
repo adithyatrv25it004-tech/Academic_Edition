@@ -81,7 +81,7 @@ serve(async (req: Request) => {
       return new Response(
         JSON.stringify({
           error: 'NO_ENTITLEMENT',
-          message: 'Active ATP Revision Pack entitlement required to access this resource.',
+          message: 'Active ATP Python Journey access required to view this resource.',
         }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );

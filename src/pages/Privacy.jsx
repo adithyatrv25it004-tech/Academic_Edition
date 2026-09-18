@@ -8,7 +8,7 @@ function Privacy() {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>PRIVACY POLICY</span>
           </div>
         </Link>
@@ -23,7 +23,7 @@ function Privacy() {
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>1. Information We Collect</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              ATP Revision Vault collects minimal information necessary to provide our academic revision services:
+              ATP Python Journey collects minimal information necessary to provide our academic revision services:
             </p>
             <ul style={{ paddingLeft: "20px", lineHeight: "1.8", color: "var(--muted-brown)" }}>
               <li>Name and email address for account creation</li>
@@ -64,7 +64,7 @@ function Privacy() {
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>4. Personal Study Access</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              Your ATP Revision Vault access is intended for personal study use only. The platform uses device binding technology to ensure secure, individual access to study materials.
+              Your ATP Python Journey access is intended for personal study use only. The platform uses device binding technology to ensure secure, individual access to study materials.
             </p>
           </section>
 

@@ -93,49 +93,80 @@ serve(async (req: Request) => {
       return new Response('Currency mismatch recorded', { status: 200 });
     }
 
-    // Verify payment status is actually captured/paid
-    const paymentStatus = paymentEntity?.status;
-    if (paymentStatus !== 'captured' && paymentStatus !== 'authorized') {
-      console.warn(`Payment status not valid: ${paymentStatus}`);
-      return new Response('Payment not completed', { status: 200 });
+    // Verify payment status is actually captured/paid - DO NOT accept 'authorized'
+    if (event.event === 'payment.captured') {
+      const paymentStatus = paymentEntity?.status;
+      if (paymentStatus !== 'captured') {
+        console.warn(`payment.captured event received with invalid status: ${paymentStatus}`);
+        return new Response('Payment not captured', { status: 200 });
+      }
+    } else if (event.event === 'order.paid') {
+      const orderStatus = orderEntity?.status;
+      if (orderStatus !== 'paid') {
+        console.warn(`order.paid event received with invalid status: ${orderStatus}`);
+        return new Response('Order not paid', { status: 200 });
+      }
+      // If paymentEntity is present in order.paid, ensure it is not merely authorized
+      if (paymentEntity?.status && paymentEntity.status === 'authorized') {
+        console.warn('Payment entity status is only authorized; waiting for captured state');
+        return new Response('Payment not captured yet', { status: 200 });
+      }
     }
 
     const supabaseAdmin = getSupabaseAdmin();
 
     // Find the corresponding order in Supabase
+    // SECURITY RULE: Local public.orders is the sole source of truth.
     const { data: orderRecord, error: orderError } = await supabaseAdmin
       .from('orders')
       .select('*')
       .eq('gateway_order_id', gatewayOrderId)
       .maybeSingle();
 
-    if (orderError || !orderRecord) {
-      console.error('Order not found for gateway_order_id:', gatewayOrderId);
-      // If user_id was stored in notes, fallback to notes
-      const notesUserId = paymentEntity?.notes?.user_id || orderEntity?.notes?.user_id;
-      if (notesUserId) {
-        await activateEntitlement(supabaseAdmin, notesUserId, gatewayPaymentId || gatewayOrderId);
-      }
-      return new Response(JSON.stringify({ status: 'Order not found, fallback attempted' }), {
-        status: 200,
-        headers: { 'Content-Type': 'application/json' },
-      });
+    if (orderError) {
+      console.error('Database query error searching order for gateway_order_id:', orderError.message || orderError);
+      return new Response('Database error looking up order', { status: 500 });
     }
 
-    // 1. Update order status to paid
-    await supabaseAdmin
+    if (!orderRecord) {
+      // SECURITY FIX: NO matching row in public.orders for gateway_order_id
+      // → NO entitlement
+      // → return safe 200 response with log
+      // → do not unlock access
+      console.warn(`No matching row in public.orders for gateway_order_id: ${gatewayOrderId}. Refusing to unlock access.`);
+      return new Response(
+        JSON.stringify({ status: 'ignored', message: 'No matching local order found' }),
+        { status: 200, headers: { 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // 1. Update order status to paid (check for errors)
+    const paymentIdToSave = gatewayPaymentId || orderRecord.gateway_payment_id || null;
+    const { error: updateError } = await supabaseAdmin
       .from('orders')
       .update({
         status: 'paid',
-        gateway_payment_id: gatewayPaymentId || orderRecord.gateway_payment_id,
+        gateway_payment_id: paymentIdToSave,
         paid_at: new Date().toISOString(),
       })
       .eq('id', orderRecord.id);
 
-    // 2. Idempotently create/activate student entitlement
-    await activateEntitlement(supabaseAdmin, orderRecord.user_id, gatewayPaymentId || gatewayOrderId);
+    if (updateError) {
+      console.error('Failed to update order status to paid:', updateError.message || updateError);
+      return new Response('Failed to update order record', { status: 500 });
+    }
 
-    console.log(`Successfully activated entitlement for user: ${orderRecord.user_id}`);
+    // 2. Idempotently create/activate student entitlement
+    // Use ONLY live public.entitlements columns: user_id, product_id, payment_id, status, activated_at
+    // NO updated_at column!
+    const paymentIdForEntitlement = gatewayPaymentId || orderRecord.gateway_payment_id || orderRecord.gateway_order_id;
+    try {
+      await activateEntitlement(supabaseAdmin, orderRecord.user_id, paymentIdForEntitlement);
+      console.log(`Successfully activated entitlement for user: ${orderRecord.user_id}, order: ${orderRecord.id}`);
+    } catch (entError: any) {
+      console.error('Failed to activate entitlement in webhook:', entError.message || entError);
+      return new Response('Failed to activate entitlement', { status: 500 });
+    }
   }
 
   return new Response(JSON.stringify({ received: true }), {
@@ -145,6 +176,7 @@ serve(async (req: Request) => {
 });
 
 async function activateEntitlement(supabaseAdmin: any, userId: string, paymentId: string) {
+  // Live public.entitlements columns: user_id, product_id, payment_id, status, activated_at
   const { error } = await supabaseAdmin
     .from('entitlements')
     .upsert(
@@ -154,7 +186,6 @@ async function activateEntitlement(supabaseAdmin: any, userId: string, paymentId
         payment_id: paymentId,
         status: 'active',
         activated_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
       },
       {
         onConflict: 'user_id,product_id',
@@ -162,7 +193,7 @@ async function activateEntitlement(supabaseAdmin: any, userId: string, paymentId
     );
 
   if (error) {
-    console.error('Error upserting entitlement:', error);
+    console.error('Error upserting entitlement:', error.message || error);
     throw error;
   }
 }

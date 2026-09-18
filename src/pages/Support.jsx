@@ -8,7 +8,7 @@ function Support() {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>SUPPORT</span>
           </div>
         </Link>
@@ -95,7 +95,7 @@ function Support() {
             <div style={{ marginBottom: "16px" }}>
               <p style={{ fontWeight: 600, marginBottom: "4px", color: "var(--ink)" }}>Q: How long does my access last?</p>
               <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-                A: Your one-time payment grants permanent access to the ATP Complete Revision Pack for your personal study use.
+                A: Your one-time payment grants permanent access to the ATP Python Journey for your personal study use.
               </p>
             </div>
           </section>

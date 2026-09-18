@@ -1,745 +1,372 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../App.css";
-import bookImage from "../assets/atp-revision-book.png";
 import { useScrollReveal } from "../lib/useScrollReveal";
+import { playUiBubbleSound } from "../lib/uiBubbleSound";
+import { supabase } from "../lib/supabase";
 
-const REVISION_STEPS = [
-  {
-    num: "01",
-    phase: "UNDERSTAND",
-    title: "Simplified Notes",
-    desc: "Understand core concepts quickly without textbook fluff.",
-  },
-  {
-    num: "02",
-    phase: "PRACTICE",
-    title: "Previous Year Questions",
-    desc: "See how topics appear in real exams.",
-  },
-  {
-    num: "03",
-    phase: "FOCUS",
-    title: "Important Questions",
-    desc: "Focus your time where it matters most.",
-  },
-  {
-    num: "04",
-    phase: "REVISE",
-    title: "Last-Minute Material",
-    desc: "Compact material built for the final hours.",
-  },
-  {
-    num: "05",
-    phase: "RECALL",
-    title: "Quick Recall",
-    desc: "Refresh key ideas in minutes before the exam.",
-  },
-];
-
-const WHATS_INSIDE_MODULES = [
-  {
-    num: "01",
-    icon: "📘",
-    title: "Simplified Notes",
-    desc: "Understand the core concept quickly.",
-    tag: "Core Concepts",
-  },
-  {
-    num: "02",
-    icon: "📝",
-    title: "Previous Year Questions",
-    desc: "See how topics appear in real exams.",
-    tag: "Exam Solved",
-  },
-  {
-    num: "03",
-    icon: "🎯",
-    title: "Important Questions",
-    desc: "Focus your time where it matters most.",
-    tag: "Priority Focus",
-  },
-  {
-    num: "04",
-    icon: "⚡",
-    title: "Last-Minute Revision",
-    desc: "Compact material for the final hours.",
-    tag: "Final Hour",
-  },
-  {
-    num: "05",
-    icon: "🧠",
-    title: "Quick Recall",
-    desc: "Refresh key ideas in minutes.",
-    tag: "Memory Triggers",
-  },
-];
-
-const WHY_IT_WORKS_POINTS = [
-  {
-    icon: "📘",
-    title: "Clear concepts",
-    desc: "Digestible summaries that strip away textbook fluff and retain core principles.",
-  },
-  {
-    icon: "📝",
-    title: "Exam-oriented practice",
-    desc: "Past exam questions organized to highlight genuine recurring question patterns.",
-  },
-  {
-    icon: "🎯",
-    title: "Priority-based revision",
-    desc: "Curated focus areas so you allocate your revision time where it matters most.",
-  },
-  {
-    icon: "⚡",
-    title: "Fast final-hour recall",
-    desc: "Compact memory sheets designed for high retention right before your exam.",
-  },
-];
-
-const CURIOSITY_CARDS = [
-  {
-    phase: "UNDERSTAND",
-    tagline: "Learn the concept.",
-    subtext: "Core theory explained clearly without unnecessary textbook padding.",
-  },
-  {
-    phase: "PRACTICE",
-    tagline: "See the exam pattern.",
-    subtext: "Real university question structures, weightage, and solved formats.",
-  },
-  {
-    phase: "RECALL",
-    tagline: "Bring it back when it matters.",
-    subtext: "High-yield trigger sheets for the critical hours right before the exam.",
-  },
-];
-
-const ACCESS_STEPS = [
-  {
-    num: "1",
-    icon: "👤",
-    title: "Create your account",
-    desc: "Register with your name and email in less than a minute.",
-  },
-  {
-    num: "2",
-    icon: "💳",
-    title: "Complete secure ₹49 checkout",
-    desc: "One-time payment processed instantly via secure Razorpay checkout.",
-  },
-  {
-    num: "3",
-    icon: "⚡",
-    title: "Payment is verified automatically",
-    desc: "Zero waiting or manual UTR submissions — access activates immediately.",
-  },
-  {
-    num: "4",
-    icon: "📱",
-    title: "Activate your study device",
-    desc: "Study securely on your chosen device with protected access.",
-  },
-  {
-    num: "5",
-    icon: "🔓",
-    title: "Enter the Revision Vault",
-    desc: "Open your personal student dashboard and begin revising right away.",
-  },
-];
-
-const FAQ_ITEMS = [
-  {
-    q: "What do I receive?",
-    a: "You receive instant access to all 5 ATP Revision modules: Simplified Concept Notes, Previous Year Questions, Important Questions, Last-Minute Revision Sheets, and Quick Recall Material, all organized within your student dashboard.",
-  },
-  {
-    q: "Is ₹49 a one-time payment?",
-    a: "Yes. ₹49 is a one-time fee for full access to the ATP Revision Vault. There are no recurring subscriptions, hidden renewals, or upgrade fees.",
-  },
-  {
-    q: "How does payment verification work?",
-    a: "Payment verification is completely automatic. Once you complete the ₹49 checkout through our secure Razorpay gateway, your account activates immediately without any manual verification or delay.",
-  },
-  {
-    q: "How do I access my material?",
-    a: "After completing payment, log in with your registered email, activate your chosen study device, and begin revising inside the Vault immediately.",
-  },
-  {
-    q: "Can I access the material on my phone?",
-    a: "Yes. The Revision Vault is fully responsive and optimized for seamless reading on smartphones, tablets, and computers. You can study securely on your chosen device wherever you are.",
-  },
-  {
-    q: "How does device security work?",
-    a: "To safeguard study material and account integrity, access is tied securely to your designated study device. This prevents unauthorized sharing and keeps your personal revision progress safe.",
-  },
-];
-
-function Home() {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [heroTilt, setHeroTilt] = useState({ rx: 0, ry: 0, tx: 0, ty: 0 });
-  const [openFaq, setOpenFaq] = useState(0);
-
+export default function Home() {
   useScrollReveal();
-
-  const handleHeroMouseMove = (e) => {
-    if (typeof window === "undefined") return;
-    if (!window.matchMedia("(pointer: fine)").matches) return;
-    if (window.innerWidth <= 768) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width - 0.5;
-    const y = (e.clientY - rect.top) / rect.height - 0.5;
-    // User Requirement 5: Desktop only subtle movement, max 3px translate, max 0.6deg rotate
-    setHeroTilt({
-      rx: Math.max(-0.6, Math.min(0.6, y * -1.2)),
-      ry: Math.max(-0.6, Math.min(0.6, x * 1.2)),
-      tx: Math.max(-3, Math.min(3, x * 6)),
-      ty: Math.max(-3, Math.min(3, y * 6)),
-    });
-  };
-
-  const handleHeroMouseLeave = () => {
-    setHeroTilt({ rx: 0, ry: 0, tx: 0, ty: 0 });
-  };
+  const [user, setUser] = useState(null);
+  const [demoSelected, setDemoSelected] = useState(null);
 
   useEffect(() => {
-    function handleScroll() {
-      if (window.scrollY > 24) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    }
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    supabase.auth.getUser().then(({ data }) => {
+      if (data?.user) setUser(data.user);
+    });
   }, []);
 
-  const toggleFaq = (index) => {
-    setOpenFaq((prev) => (prev === index ? -1 : index));
-  };
-
   return (
-    <div className="app paper-texture">
-      {/* ==================================================================
-          NAVBAR: Warm Ivory Glass on Scroll, Clean Typography
-          ================================================================== */}
-      <header className={`navbar-wrapper ${isScrolled ? "scrolled" : ""}`}>
-        <nav className="navbar" aria-label="Main Navigation">
-          <Link className="brand" to="/">
-            <span className="brand-crest">A</span>
-            <div className="brand-text">
-              <strong>ATP Revision Vault</strong>
-              <span>Academic Edition</span>
+    <div className="home-page" style={{ background: "#F7F3EA", color: "#172033", fontFamily: "var(--font-sans)", minHeight: "100vh" }}>
+      
+      {/* Navigation Header */}
+      <header className="quiet-topbar" style={{ background: "rgba(247, 243, 234, 0.95)", backdropFilter: "blur(8px)", position: "sticky", top: 0, zIndex: 100, borderBottom: "1px solid #DED5C6", padding: "16px 24px" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+          <Link to="/" className="auth-brand" style={{ display: "flex", alignItems: "center", gap: "10px", textDecoration: "none" }}>
+            <span style={{ background: "#172033", color: "#C79A45", width: "36px", height: "36px", borderRadius: "8px", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: "bold", fontSize: "1.2rem" }}>A</span>
+            <div className="auth-brand-text">
+              <strong style={{ color: "#172033", fontSize: "1.1rem" }}>ATP Python Journey</strong>
+              <span style={{ display: "block", fontSize: "0.75rem", color: "#6F756F", letterSpacing: "1px", textTransform: "uppercase" }}>KTU S1 UCEST105</span>
             </div>
           </Link>
 
-          <div className="nav-links">
-            <a href="#why-this-pack" className="nav-link">Why This Pack</a>
-            <a href="#whats-inside" className="nav-link">What's Inside</a>
-            <a href="#preview" className="nav-link">Preview</a>
-            <a href="#revision-flow" className="nav-link">Revision Flow</a>
-            <a href="#why-it-works" className="nav-link">Why It Works</a>
-            <a href="#access-process" className="nav-link">Process</a>
-            <a href="#faq" className="nav-link">FAQ</a>
-          </div>
+          <nav style={{ display: "flex", alignItems: "center", gap: "24px", fontSize: "0.95rem", fontWeight: 500 }} className="desktop-nav">
+            <a href="#why-atp" style={{ color: "#24324A" }}>Why ATP</a>
+            <a href="#course" style={{ color: "#24324A" }}>Course</a>
+            <a href="#demo" style={{ color: "#24324A" }}>Classroom Demo</a>
+            <a href="#labs" style={{ color: "#24324A" }}>18 Labs</a>
+            <a href="#pricing" style={{ color: "#24324A" }}>Pricing</a>
+          </nav>
 
-          <div className="nav-actions">
-            <Link className="nav-login-btn" to="/login" aria-label="Login to your account">Login</Link>
+          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+            {user ? (
+              <Link to="/vault" className="btn-primary" style={{ padding: "8px 20px", fontSize: "0.9rem", textDecoration: "none" }}>
+                Student Dashboard →
+              </Link>
+            ) : (
+              <>
+                <Link to="/login" style={{ padding: "8px 16px", color: "#315C8C", fontWeight: 600, textDecoration: "none", fontSize: "0.95rem" }}>
+                  Sign In
+                </Link>
+                <Link to="/signup" className="btn-primary" style={{ padding: "8px 20px", fontSize: "0.9rem", textDecoration: "none" }}>
+                  START LEARNING
+                </Link>
+              </>
+            )}
           </div>
-        </nav>
+        </div>
       </header>
 
-      <main>
-        {/* ==================================================================
-            1. HERO SECTION (ONLY PURCHASE CTA ON ENTIRE HOMEPAGE)
-            ================================================================== */}
-        <section className="hero-section">
-          <div className="page-container hero-layout">
-            <div className="hero-copy">
-              <span className="eyebrow hero-eyebrow">
-                <span className="eyebrow-dot"></span>
-                01 / ATP COMPLETE REVISION PACK
+      {/* HERO SECTION */}
+      <section style={{ padding: "80px 24px 60px", background: "linear-gradient(180deg, #F7F3EA 0%, #FFFDF8 100%)", borderBottom: "1px solid #DED5C6" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "48px", alignItems: "center" }}>
+          
+          <div>
+            <span style={{ display: "inline-block", background: "#EEF4FA", color: "#315C8C", border: "1px solid #315C8C", padding: "6px 14px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: 700, letterSpacing: "1px", textTransform: "uppercase", marginBottom: "20px" }}>
+              KTU S1 • UCEST105 • B.Tech 2024 Scheme
+            </span>
+            
+            <h1 style={{ fontSize: "2.8rem", lineHeight: 1.15, color: "#172033", margin: "0 0 20px 0", fontWeight: 800 }}>
+              LEARN FIRST-YEAR PYTHON FROM ZERO.
+            </h1>
+
+            <p style={{ fontSize: "1.15rem", lineHeight: 1.6, color: "#6F756F", margin: "0 0 32px 0", maxWidth: "540px" }}>
+              ATP guides you through <strong>Algorithmic Thinking with Python</strong> with short guided lessons, visual explanations, real Python execution, 18 practical labs, and exam preparation.
+            </p>
+
+            <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginBottom: "24px" }}>
+              <Link to="/payment" onClick={() => playUiBubbleSound()} className="btn-primary" style={{ padding: "14px 32px", fontSize: "1.1rem", textDecoration: "none", boxShadow: "0 4px 14px rgba(23, 32, 51, 0.15)" }}>
+                START LEARNING — ₹49
+              </Link>
+              <Link to="/learn/m1-problem-solving-intro" className="btn-secondary" style={{ padding: '14px 24px', fontSize: '1.1rem', textDecoration: 'none', background: '#ffffff', color: '#172033', border: '1px solid #DED5C6' }}>
+                TRY A FREE LESSON
+              </Link>
+            </div>
+
+            <div style={{ fontSize: "0.9rem", color: "#746E65", display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
+              <span>✓ ₹49 One-Time Access</span>
+              <span>•</span>
+              <span>✓ Complete UCEST105 Journey</span>
+              <span>•</span>
+              <span>✓ Revision Notes Included</span>
+            </div>
+          </div>
+
+          {/* Hero Visual: ATP Classroom Interactive Teaser */}
+          <div style={{ background: "#172033", color: "#F7F3EA", padding: "28px", borderRadius: "16px", boxShadow: "0 24px 60px rgba(23, 32, 51, 0.2)", border: "1px solid rgba(255,255,255,0.1)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "16px", borderBottom: "1px solid rgba(255,255,255,0.1)", paddingBottom: "12px" }}>
+              <span style={{ color: "#C79A45", fontWeight: "bold", fontSize: "0.85rem", letterSpacing: "1px" }}>
+                MODULE 3 • FOR LOOPS
               </span>
-
-              <h1 className="hero-headline">
-                <span className="headline-line-1">Revise smarter.</span>
-                <span className="headline-line-2 academic-accent">Walk in prepared.</span>
-              </h1>
-
-              <p className="hero-lede">
-                Everything you need for focused ATP revision — organised into one clear study system.
-              </p>
-
-              <div className="hero-editorial-callout">
-                <span className="editorial-line" aria-hidden="true"></span>
-                <p className="editorial-text">
-                  Less searching. More revising. Better use of your final hours.
-                </p>
-              </div>
-
-              <div className="hero-actions">
-                <Link to="/signup" className="btn-primary hero-cta-btn" aria-label="Get the complete ATP revision pack for ₹49">
-                  GET THE COMPLETE PACK — <span className="cta-price-highlight">₹49</span> <span className="cta-arrow" aria-hidden="true">→</span>
-                </Link>
-                <a href="#why-this-pack" className="btn-secondary hero-secondary-btn" aria-label="Explore what's inside the revision pack">
-                  Explore What's Inside <span aria-hidden="true">↓</span>
-                </a>
-              </div>
-
-              <div className="hero-meta">
-                <span>One-time payment</span>
-                <span className="hero-meta-dot" aria-hidden="true">•</span>
-                <span>Personal access</span>
-                <span className="hero-meta-dot" aria-hidden="true">•</span>
-                <span>Built for focused revision</span>
-              </div>
+              <span style={{ fontSize: "0.8rem", color: "#8b9bb4" }}>Lesson 2 of 10</span>
             </div>
 
-            <div
-              className="hero-visual-wrapper"
-              onMouseMove={handleHeroMouseMove}
-              onMouseLeave={handleHeroMouseLeave}
-              style={{
-                transform:
-                  heroTilt.rx || heroTilt.ry || heroTilt.tx || heroTilt.ty
-                    ? `perspective(1000px) translate3d(${heroTilt.tx}px, ${heroTilt.ty}px, 0) rotateX(${heroTilt.rx}deg) rotateY(${heroTilt.ry}deg)`
-                    : undefined,
-                transition: "transform 0.25s cubic-bezier(0.22, 1, 0.36, 1)",
-              }}
-            >
-              {/* Soft ambient warm gold glow behind book */}
-              <div className="ambient-glow" aria-hidden="true"></div>
+            <div style={{ background: "rgba(255,255,255,0.05)", padding: "14px 16px", borderRadius: "8px", marginBottom: "16px", fontSize: "0.95rem" }}>
+              <strong>🎓 ATP Teacher:</strong> "Don't run it yet. What do you think Python will print?"
+            </div>
 
-              {/* Ground shadow beneath book */}
-              <div className="book-ground-shadow" aria-hidden="true"></div>
+            {/* Code Block */}
+            <div style={{ background: "#0d1117", padding: "16px", borderRadius: "8px", fontFamily: "monospace", fontSize: "0.95rem", color: "#a5d6ff", marginBottom: "16px" }}>
+              <span style={{ color: "#ff7b72" }}>for</span> i <span style={{ color: "#ff7b72" }}>in</span> range(<span style={{ color: "#79c0ff" }}>3</span>):<br />
+              &nbsp;&nbsp;&nbsp;&nbsp;print(i)
+            </div>
 
-              <img
-                src={bookImage}
-                alt="ATP Revision Vault Complete Study Pack"
-                className="hero-book-img"
-              />
+            {/* Simulated Execution Controls */}
+            <div style={{ display: "flex", gap: "10px", marginBottom: "16px" }}>
+              <button style={{ flex: 1, padding: "8px", background: "#315C8C", color: "#fff", border: "none", borderRadius: "6px", fontSize: "0.85rem", cursor: "pointer", fontWeight: "bold" }}>
+                ▶ RUN CODE
+              </button>
+              <button style={{ flex: 1, padding: "8px", background: "#238636", color: "#fff", border: "none", borderRadius: "6px", fontSize: "0.85rem", cursor: "pointer", fontWeight: "bold" }}>
+                ✓ CHECK MY WORK
+              </button>
+            </div>
 
-              {/* Floating Academic Paper Tabs */}
-              <div className="paper-tab tab-notes" aria-label="Simplified Notes">
-                <span className="tab-tag-icon">📘</span>
-                <span>Simplified Notes</span>
-              </div>
-
-              <div className="paper-tab tab-pyq" aria-label="PYQ Collection">
-                <span className="tab-tag-icon">📝</span>
-                <span>PYQ Collection</span>
-              </div>
+            {/* Console Output Preview */}
+            <div style={{ background: "#0d1117", padding: "12px", borderRadius: "6px", fontSize: "0.85rem", fontFamily: "monospace", color: "#38d9a9" }}>
+              Output:<br />
+              0<br />1<br />2
             </div>
           </div>
-        </section>
 
-        {/* ==================================================================
-            2. WHY THIS PACK (CONCISE, EMOTIONALLY RELEVANT)
-            ================================================================== */}
-        <section id="why-this-pack" className="section-editorial problem-section">
-          <div className="page-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow">
-                <span className="eyebrow-dot"></span>
-                THE REVISION PROBLEM
-              </span>
-              <h2 className="section-title">Revision shouldn't begin with searching.</h2>
-              <div className="gold-divider centered"></div>
-            </div>
+        </div>
+      </section>
 
-            <div className="problem-solution-grid">
-              <div className="problem-card reveal-init reveal-left">
-                <div className="problem-card-header">
-                  <span className="problem-badge">COMMON FRICTION</span>
-                  <h3>Where revision time gets lost</h3>
-                </div>
-                <ul className="problem-list">
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Scattered notes and random PDFs</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>Too much material, not enough time</span>
-                  </li>
-                  <li>
-                    <span className="bullet-cross">✕</span>
-                    <span>No clear order for what to revise first</span>
-                  </li>
-                </ul>
-              </div>
-
-              <div className="solution-card reveal-init reveal-right">
-                <div className="solution-card-header">
-                  <span className="solution-badge">THE VAULT ARCHITECTURE</span>
-                  <h3>The Vault Solution</h3>
-                </div>
-                <p className="solution-lead">
-                  ATP Revision Vault turns scattered material into one focused revision path.
-                </p>
-                <div className="solution-pillars">
-                  <div className="solution-pillar">
-                    <span className="pillar-num">01</span>
-                    <div>
-                      <strong>Single-Source Access</strong>
-                      <span>Zero searching across chat groups or folders.</span>
-                    </div>
-                  </div>
-                  <div className="solution-pillar">
-                    <span className="pillar-num">02</span>
-                    <div>
-                      <strong>Purpose-Built Material</strong>
-                      <span>Notes for understanding, summaries for recall.</span>
-                    </div>
-                  </div>
-                  <div className="solution-pillar">
-                    <span className="pillar-num">03</span>
-                    <div>
-                      <strong>Sequence-Driven Flow</strong>
-                      <span>Open one place. Know what to revise next.</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            3. WHAT'S INSIDE (5 CARDS ONLY, 1 SENTENCE EACH, NO WHY BOX)
-            ================================================================== */}
-        <section id="whats-inside" className="section-editorial features-section">
-          <div className="page-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow">
-                <span className="eyebrow-dot"></span>
-                STRUCTURED CURATION
-              </span>
-              <h2 className="section-title">Everything has a purpose.</h2>
-              <p className="section-subtitle">
-                Five carefully structured revision resources designed to provide complete revision coverage without overwhelm.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="features-grid">
-              {WHATS_INSIDE_MODULES.map((item, index) => (
-                <div className={`chapter-card reveal-init stagger-${index + 1}`} key={item.num} role="article">
-                  <div className="bookmark-ribbon" aria-hidden="true"></div>
-                  <div className="chapter-card-top">
-                    <span className="chapter-num" aria-hidden="true">{item.num}</span>
-                    <span className="chapter-badge">{item.tag}</span>
-                  </div>
-                  <h3>{item.title}</h3>
-                  <p>{item.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            4. REAL PREVIEW SECTION (3 CARDS ONLY, CURIOSITY-DRIVEN)
-            ================================================================== */}
-        <section id="preview" className="section-editorial sneak-peek-section">
-          <div id="sneak-peek" className="anchor-shim" aria-hidden="true"></div>
-          <div className="page-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow eyebrow-blue">
-                <span className="eyebrow-dot"></span>
-                AUTHENTIC SAMPLES
-              </span>
-              <h2 className="section-title">A small look inside the Vault.</h2>
-              <p className="section-subtitle">
-                Enough to see the structure. The full material stays inside.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="peek-grid peek-grid-three">
-              {/* Preview 1: Simplified Notes */}
-              <article className="peek-card reveal-init stagger-1">
-                <div className="peek-card-header">
-                  <span className="peek-tag">SIMPLIFIED NOTES</span>
-                  <span className="peek-badge">Important topic</span>
-                </div>
-                <h3 className="peek-title">Control Structures &amp; Branching</h3>
-                <div className="peek-sheet">
-                  <p className="peek-sheet-def">
-                    "A control mechanism that alters the sequential flow of program execution based on an evaluated boolean expression."
-                  </p>
-                  <div className="peek-code">
-{`if (condition == true) {
-  execute_target_block();
-} else {
-  fallback_routine();
-}`}
-                  </div>
-                  <span className="peek-marker">EXAM PATTERN</span>
-                  <p style={{ margin: 0, fontSize: "11px", color: "var(--muted)" }}>
-                    Always evaluate nested switch cases for break fall-through.
-                  </p>
-
-                  <div className="peek-blur-overlay">
-                    <span className="peek-sample-pill">🔒 Preview</span>
-                  </div>
-                </div>
-              </article>
-
-              {/* Preview 2: PYQ Collection */}
-              <article className="peek-card reveal-init stagger-2">
-                <div className="peek-card-header">
-                  <span className="peek-tag">PYQ COLLECTION</span>
-                  <span className="peek-badge">Exam pattern</span>
-                </div>
-                <h3 className="peek-title">Verified Previous Questions</h3>
-                <div className="peek-sheet">
-                  <div className="peek-pyq-item">
-                    <strong>Q1. Compare static vs dynamic binding.</strong>
-                    <span>[Core concept • 5 Marks]</span>
-                  </div>
-                  <div className="peek-pyq-item">
-                    <strong>Q2. Explain stack frame lifecycle during recursion.</strong>
-                    <span>[Sample layout • 7 Marks]</span>
-                  </div>
-
-                  <div className="peek-blur-overlay">
-                    <span className="peek-sample-pill">🔒 Preview</span>
-                  </div>
-                </div>
-              </article>
-
-              {/* Preview 3: Last-Minute Revision */}
-              <article className="peek-card reveal-init stagger-3">
-                <div className="peek-card-header">
-                  <span className="peek-tag">LAST-MINUTE REVISION</span>
-                  <span className="peek-badge">Quick checkpoint</span>
-                </div>
-                <h3 className="peek-title">High-Yield Memory Trigger</h3>
-                <div className="peek-sheet">
-                  <span className="peek-marker">CORE CHECKPOINT</span>
-                  <p style={{ margin: "4px 0 10px", fontSize: "11.5px", fontWeight: 600 }}>
-                    Execution precedence: Unary &gt; Arithmetic &gt; Relational &gt; Logical.
-                  </p>
-                  <span className="peek-marker">QUICK SUMMARY</span>
-                  <p style={{ margin: "4px 0 0", fontSize: "11px", color: "var(--muted)" }}>
-                    Pass-by-value duplicates storage; Pass-by-reference aliases pointer.
-                  </p>
-
-                  <div className="peek-blur-overlay">
-                    <span className="peek-sample-pill">🔒 Preview</span>
-                  </div>
-                </div>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            5. REVISION FLOW (THE LEARNING STORY)
-            ================================================================== */}
-        <section id="revision-flow" className="section-editorial system-section">
-          <div className="page-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow eyebrow-gold">
-                <span className="eyebrow-dot"></span>
-                THE REVISION BLUEPRINT
-              </span>
-              <h2 className="section-title">One clear path from learning to recall.</h2>
-              <p className="section-subtitle">
-                Move through the material in sequence — from building understanding to quick recall before your exam.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="flow-timeline reveal-init">
-              {REVISION_STEPS.map((step, idx) => (
-                <div className={`flow-step-card reveal-init stagger-${idx + 1}`} key={step.num}>
-                  <span className="flow-step-number">{step.num}</span>
-                  <span className="flow-step-phase">{step.phase}</span>
-                  <h3 className="flow-step-title">{step.title}</h3>
-                  <p className="flow-step-desc">{step.desc}</p>
-                  {idx < REVISION_STEPS.length - 1 && (
-                    <div className="flow-arrow-indicator" aria-hidden="true">→</div>
-                  )}
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            6. WHY IT WORKS (COMPACT 4 VALUE POINTS)
-            ================================================================== */}
-        <section id="why-it-works" className="section-editorial why-it-works-section">
-          <div className="page-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow eyebrow-blue">
-                <span className="eyebrow-dot"></span>
-                ACADEMIC FOCUS
-              </span>
-              <h2 className="section-title">Built for focused revision.</h2>
-              <p className="section-subtitle">
-                Designed as a disciplined revision companion, not an unorganized file dump.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="why-it-works-grid">
-              {WHY_IT_WORKS_POINTS.map((pt, idx) => (
-                <div className={`why-value-card reveal-init stagger-${idx + 1}`} key={pt.title} role="article">
-                  <div className="why-value-icon" aria-hidden="true">{pt.icon}</div>
-                  <div className="why-value-content">
-                    <h3 className="why-value-title">{pt.title}</h3>
-                    <p className="why-value-desc">{pt.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            7. CURIOSITY MOMENT & ACCESS PROCESS
-            ================================================================== */}
-        <section id="access-process" className="section-editorial access-section">
-          <div className="page-container">
-            {/* 7a. The Curiosity Moment */}
-            <div className="curiosity-moment-block">
-              <div className="section-header centered reveal-init">
-                <span className="eyebrow eyebrow-gold">
-                  <span className="eyebrow-dot"></span>
-                  CURATED PURPOSE
-                </span>
-                <h2 className="section-title">Everything in the Vault has a reason to be there.</h2>
-                <div className="gold-divider centered"></div>
-              </div>
-
-              <div className="curiosity-grid">
-                {CURIOSITY_CARDS.map((card, idx) => (
-                  <div className={`curiosity-card reveal-init stagger-${idx + 1}`} key={card.phase}>
-                    <span className="curiosity-phase">{card.phase}</span>
-                    <h3 className="curiosity-tagline">"{card.tagline}"</h3>
-                    <p className="curiosity-subtext">{card.subtext}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* 7b. The Automated 5-Step Access Process */}
-            <div className="access-process-block">
-              <div className="section-header centered reveal-init" style={{ marginTop: "72px" }}>
-                <span className="eyebrow">
-                  <span className="eyebrow-dot"></span>
-                  AUTOMATED ACCESS
-                </span>
-                <h2 className="section-title">Simple access. Clear process.</h2>
-                <p className="section-subtitle">
-                  Study securely on your chosen device with instant automated checkout.
-                </p>
-                <div className="gold-divider centered"></div>
-              </div>
-
-              <div className="trust-steps-grid">
-                {ACCESS_STEPS.map((step, idx) => (
-                  <div className={`trust-step-card reveal-init stagger-${idx + 1}`} key={step.num} role="listitem">
-                    <div className="trust-step-num-badge" aria-hidden="true">{step.num}</div>
-                    <span className="trust-step-icon" aria-hidden="true">{step.icon}</span>
-                    <h4>{step.title}</h4>
-                    <p>{step.desc}</p>
-                    {idx < ACCESS_STEPS.length - 1 && (
-                      <div className="trust-step-connector" aria-hidden="true">→</div>
-                    )}
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* ==================================================================
-            8. FAQ SECTION (SMOOTH ACCORDION, AUTOMATED PAYMENT & SECURITY)
-            ================================================================== */}
-        <section id="faq" className="section-editorial faq-section">
-          <div className="page-container faq-container">
-            <div className="section-header centered reveal-init">
-              <span className="eyebrow eyebrow-blue">
-                <span className="eyebrow-dot"></span>
-                COMMON QUESTIONS
-              </span>
-              <h2 className="section-title">Frequently Asked Questions</h2>
-              <p className="section-subtitle">
-                Clear answers about the pack, automatic activation, and how to access your study materials.
-              </p>
-              <div className="gold-divider centered"></div>
-            </div>
-
-            <div className="faq-list" role="list">
-              {FAQ_ITEMS.map((item, index) => {
-                const isOpen = openFaq === index;
-                return (
-                  <div className={`faq-item ${isOpen ? "open" : ""}`} key={item.q} role="listitem">
-                    <button
-                      type="button"
-                      className="faq-question"
-                      onClick={() => toggleFaq(index)}
-                      aria-expanded={isOpen}
-                      aria-controls={`faq-answer-${index}`}
-                      id={`faq-question-${index}`}
-                    >
-                      <span>{item.q}</span>
-                      <span className="faq-icon-bubble" aria-hidden="true">{isOpen ? '−' : '+'}</span>
-                    </button>
-                    {isOpen && (
-                      <div className="faq-answer" id={`faq-answer-${index}`} role="region" aria-labelledby={`faq-question-${index}`}>
-                        <p>{item.a}</p>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </section>
-      </main>
-
-      {/* ==================================================================
-          9. MINIMAL FOOTER (NO PURCHASE CTA)
-          ================================================================== */}
-      <footer className="site-footer">
-        <div className="footer-content">
-          <Link className="brand" to="/">
-            <span className="brand-crest">A</span>
-            <div className="brand-text">
-              <strong>ATP Revision Vault</strong>
-              <span>Built for the hours that matter most.</span>
-            </div>
-          </Link>
-
-          <div className="footer-links">
-            <a href="#whats-inside">What's Inside</a>
-            <a href="#preview">Preview</a>
-            <a href="#why-this-pack">Why This Pack</a>
-            <a href="#revision-flow">Revision Flow</a>
-            <a href="#why-it-works">Why It Works</a>
-            <a href="#faq">FAQ</a>
-            <Link to="/login">Login</Link>
-            <Link to="/privacy">Privacy</Link>
-            <Link to="/terms">Terms</Link>
-            <Link to="/refund">Refund</Link>
-            <Link to="/support">Support</Link>
-          </div>
-
-          <p style={{ margin: 0 }}>
-            © {new Date().getFullYear()} ATP Revision Vault. All rights reserved.
+      {/* PROBLEM SECTION */}
+      <section id="why-atp" style={{ padding: "80px 24px", background: "#FFFDF8", borderBottom: "1px solid #DED5C6" }}>
+        <div style={{ maxWidth: "900px", margin: "0 auto", textAlign: "center" }}>
+          <span style={{ color: "#813E51", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "1px", textTransform: "uppercase" }}>THE FIRST-YEAR CHALLENGE</span>
+          <h2 style={{ fontSize: "2.2rem", margin: "12px 0 20px 0", color: "#172033" }}>
+            Python feels hard when you're left to figure out the order.
+          </h2>
+          <p style={{ fontSize: "1.1rem", color: "#6F756F", lineHeight: 1.6, marginBottom: "40px" }}>
+            You may already have syllabus PDFs, scattered notes, YouTube tutorials, and ChatGPT. But when exam day approaches, you still ask: <em>"What do I learn next, and how do I solve this problem?"</em>
           </p>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "24px", textAlign: "left" }}>
+            <div style={{ background: "#F7F3EA", padding: "24px", borderRadius: "12px", border: "1px solid #DED5C6" }}>
+              <span style={{ fontSize: "1.5rem" }}>❌</span>
+              <h4 style={{ margin: "12px 0 6px 0", color: "#172033" }}>Scattered YouTube Videos</h4>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#746E65" }}>Generic tutorials cover Web Dev or AI instead of KTU UCEST105 syllabus requirements.</p>
+            </div>
+            <div style={{ background: "#F7F3EA", padding: "24px", borderRadius: "12px", border: "1px solid #DED5C6" }}>
+              <span style={{ fontSize: "1.5rem" }}>❌</span>
+              <h4 style={{ margin: "12px 0 6px 0", color: "#172033" }}>Static PDF Notes</h4>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#746E65" }}>Reading code on paper doesn't teach call stack unwinding or loop boundaries.</p>
+            </div>
+            <div style={{ background: "#F7F3EA", padding: "24px", borderRadius: "12px", border: "1px solid #DED5C6" }}>
+              <span style={{ fontSize: "1.5rem" }}>✅</span>
+              <h4 style={{ margin: "12px 0 6px 0", color: "#315C8C" }}>The ATP Guided Path</h4>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#172033" }}>Every lesson is structured: Teach → Show → Ask → Visualize → Try → Run → Check.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* HOW ATP TEACHES */}
+      <section style={{ padding: "80px 24px", background: "#F7F3EA", borderBottom: "1px solid #DED5C6" }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "60px" }}>
+            <span style={{ color: "#C79A45", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "1px", textTransform: "uppercase" }}>PEDAGOGY THAT WORKS</span>
+            <h2 style={{ fontSize: "2.2rem", margin: "8px 0 0 0", color: "#172033" }}>How ATP Teaches Python</h2>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "16px" }}>
+            {[
+              { num: "01", step: "LEARN", desc: "Understand core concepts in simple terms" },
+              { num: "02", step: "SEE", desc: "Visualize loop variables and call stack" },
+              { num: "03", step: "TRY", desc: "Predict output before executing" },
+              { num: "04", step: "RUN", desc: "Run real Python inside your browser" },
+              { num: "05", step: "CHECK", desc: "Get automatic deterministic checking" },
+              { num: "06", step: "MASTER", desc: "Track progress & prepare for exam" }
+            ].map((s) => (
+              <div key={s.num} style={{ background: "#FFFDF8", padding: "24px 16px", borderRadius: "12px", border: "1px solid #DED5C6", textAlign: "center" }}>
+                <span style={{ fontSize: "0.8rem", fontWeight: "bold", color: "#C79A45", fontFamily: "monospace" }}>{s.num}</span>
+                <h4 style={{ margin: "8px 0 6px 0", color: "#172033", fontSize: "1.1rem" }}>{s.step}</h4>
+                <p style={{ margin: 0, fontSize: "0.85rem", color: "#6F756F" }}>{s.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* COURSE MODULES OVERVIEW */}
+      <section id="course" style={{ padding: "80px 24px", background: "#FFFDF8", borderBottom: "1px solid #DED5C6" }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto" }}>
+          <div style={{ textAlign: "center", marginBottom: "60px" }}>
+            <span style={{ color: "#315C8C", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "1px", textTransform: "uppercase" }}>SYLLABUS COVERAGE</span>
+            <h2 style={{ fontSize: "2.2rem", margin: "8px 0 0 0", color: "#172033" }}>Complete UCEST105 Modules</h2>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px" }}>
+            <div style={{ background: "#F7F3EA", padding: "28px", borderRadius: "14px", border: "1px solid #DED5C6" }}>
+              <span style={{ fontSize: "0.8rem", color: "#315C8C", fontWeight: "bold" }}>MODULE 1 • 7 HOURS</span>
+              <h3 style={{ margin: "8px 0 12px 0", color: "#172033" }}>Problem Solving & Python Essentials</h3>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#6F756F" }}>Strategies (heuristics, backtracking), computation models, variables, numeric types, math module, operators & precedence.</p>
+            </div>
+
+            <div style={{ background: "#F7F3EA", padding: "28px", borderRadius: "14px", border: "1px solid #DED5C6" }}>
+              <span style={{ fontSize: "0.8rem", color: "#315C8C", fontWeight: "bold" }}>MODULE 2 • 9 HOURS</span>
+              <h3 style={{ margin: "8px 0 12px 0", color: "#172033" }}>Algorithms, Pseudocode & Flowcharts</h3>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#6F756F" }}>Pseudocode structures (case, repeat-until), 9 official flowchart symbols, 10 official sample problems (factorial, grades, SI).</p>
+            </div>
+
+            <div style={{ background: "#F7F3EA", padding: "28px", borderRadius: "14px", border: "1px solid #DED5C6" }}>
+              <span style={{ fontSize: "0.8rem", color: "#315C8C", fontWeight: "bold" }}>MODULE 3 • 10 HOURS</span>
+              <h3 style={{ margin: "8px 0 12px 0", color: "#172033" }}>Python Programming, Functions & Recursion</h3>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#6F756F" }}>Decisions, for/while loops, strings, lists, tuples, sets, dicts, NumPy, functions, decomposition (Merge Sort) & recursion call stack.</p>
+            </div>
+
+            <div style={{ background: "#F7F3EA", padding: "28px", borderRadius: "14px", border: "1px solid #DED5C6" }}>
+              <span style={{ fontSize: "0.8rem", color: "#315C8C", fontWeight: "bold" }}>MODULE 4 • 10 HOURS</span>
+              <h3 style={{ margin: "8px 0 12px 0", color: "#172033" }}>Computational Approaches</h3>
+              <p style={{ margin: 0, fontSize: "0.9rem", color: "#6F756F" }}>Brute Force (padlock), Divide & Conquer (Merge Sort), Dynamic Programming (Fibonacci), Greedy (task scheduling), Randomized (coupon, hats).</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CLASSROOM INTERACTIVE DEMO */}
+      <section id="demo" style={{ padding: "80px 24px", background: "#172033", color: "#F7F3EA" }}>
+        <div style={{ maxWidth: "800px", margin: "0 auto", textAlign: "center" }}>
+          <span style={{ color: "#C79A45", fontWeight: 700, fontSize: "0.85rem", letterSpacing: "1px", textTransform: "uppercase" }}>INTERACTIVE CLASSROOM DEMO</span>
+          <h2 style={{ fontSize: "2.2rem", margin: "12px 0 24px 0" }}>Test Your Understanding Right Now</h2>
+
+          <div style={{ background: "#FFFDF8", color: "#172033", padding: "32px", borderRadius: "16px", textAlign: "left", boxShadow: "0 18px 45px rgba(0,0,0,0.3)" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "16px" }}>
+              <span style={{ fontSize: "1.4rem" }}>🎓</span>
+              <h4 style={{ margin: 0, color: "#315C8C" }}>ATP Teacher Question:</h4>
+            </div>
+
+            <p style={{ fontSize: "1.1rem", fontWeight: 600, marginBottom: "16px" }}>
+              What values are produced by <code>list(range(3))</code> in Python?
+            </p>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginBottom: "20px" }}>
+              {[
+                { id: 'a', text: '[0, 1, 2]', isCorrect: true },
+                { id: 'b', text: '[1, 2, 3]', isCorrect: false },
+                { id: 'c', text: '[0, 1, 2, 3]', isCorrect: false }
+              ].map((opt) => (
+                <button
+                  key={opt.id}
+                  onClick={() => setDemoSelected(opt.id)}
+                  style={{
+                    padding: "12px 18px",
+                    borderRadius: "8px",
+                    border: `2px solid ${demoSelected === opt.id ? (opt.isCorrect ? "#238636" : "#cf222e") : "#DED5C6"}`,
+                    background: demoSelected === opt.id ? (opt.isCorrect ? "#dafbe1" : "#ffebe9") : "#ffffff",
+                    color: "#172033",
+                    fontSize: "1rem",
+                    fontWeight: 600,
+                    textAlign: "left",
+                    cursor: "pointer"
+                  }}
+                >
+                  {opt.text}
+                </button>
+              ))}
+            </div>
+
+            {demoSelected === 'a' && (
+              <div style={{ background: "#dafbe1", color: "#1a7f37", padding: "14px", borderRadius: "8px", fontWeight: 600, fontSize: "0.95rem" }}>
+                ✓ Correct! <code>range(3)</code> starts at 0 and stops before reaching 3, generating <code>[0, 1, 2]</code>.
+              </div>
+            )}
+
+            {demoSelected && demoSelected !== 'a' && (
+              <div style={{ background: "#ffebe9", color: "#cf222e", padding: "14px", borderRadius: "8px", fontWeight: 600, fontSize: "0.95rem" }}>
+                ❌ Remember: In Python, <code>range(stop)</code> always excludes the stop number itself!
+              </div>
+            )}
+          </div>
+        </div>
+      </section>
+
+      {/* 18 PRACTICAL LABS & EXAM PRACTICE */}
+      <section id="labs" style={{ padding: "80px 24px", background: "#FFFDF8", borderBottom: "1px solid #DED5C6" }}>
+        <div style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "40px" }}>
+          
+          <div style={{ background: "#F7F3EA", padding: "32px", borderRadius: "16px", border: "1px solid #DED5C6" }}>
+            <span style={{ fontSize: "2rem" }}>🧪</span>
+            <h3 style={{ fontSize: "1.6rem", margin: "12px 0", color: "#172033" }}>18 Official Practical Labs</h3>
+            <p style={{ color: "#6F756F", lineHeight: 1.6, marginBottom: "20px" }}>
+              Every single lab experiment required by the KTU UCEST105 syllabus is implemented with real browser Python execution, viva voice practice, and lab readiness evaluation.
+            </p>
+            <ul style={{ paddingLeft: "20px", color: "#24324A", fontSize: "0.95rem", lineHeight: 1.8 }}>
+              <li>Factorial, Fibonacci, GCD Recursion</li>
+              <li>NumPy Array Append & Delete</li>
+              <li>Virtual Module Imports & Custom Functions</li>
+              <li>Right Triangle Checker & Mobile Validator</li>
+            </ul>
+          </div>
+
+          <div style={{ background: "#F7F3EA", padding: "32px", borderRadius: "16px", border: "1px solid #DED5C6" }}>
+            <span style={{ fontSize: "2rem" }}>📝</span>
+            <h3 style={{ fontSize: "1.6rem", margin: "12px 0", color: "#172033" }}>ESE Exam Practice</h3>
+            <p style={{ color: "#6F756F", lineHeight: 1.6, marginBottom: "20px" }}>
+              Practice for the End Semester Examination using official KTU format guidelines with model answer points and self-check checklists.
+            </p>
+            <ul style={{ paddingLeft: "20px", color: "#24324A", fontSize: "0.95rem", lineHeight: 1.8 }}>
+              <li>Part A: 8 Questions × 3 Marks = 24 Marks</li>
+              <li>Part B: 4 Questions × 9 Marks = 36 Marks</li>
+              <li>Full 60-Mark ESE Mock Exam Mode</li>
+              <li>Model Points & Keyword Evaluation Rubric</li>
+            </ul>
+          </div>
+
+        </div>
+      </section>
+
+      {/* PRICING SECTION */}
+      <section id="pricing" style={{ padding: "80px 24px", background: "#F7F3EA" }}>
+        <div style={{ maxWidth: "600px", margin: "0 auto", textTransform: "center" }}>
+          <div style={{ background: "#FFFDF8", padding: "40px", borderRadius: "20px", border: "2px solid #C79A45", boxShadow: "0 18px 45px rgba(23, 32, 51, 0.08)", textAlign: "center" }}>
+            <span style={{ background: "#FAF5E8", color: "#C79A45", padding: "6px 16px", borderRadius: "20px", fontSize: "0.85rem", fontWeight: "bold", textTransform: "uppercase", letterSpacing: "1px" }}>
+              ALL-INCLUSIVE ACCESS
+            </span>
+
+            <h2 style={{ fontSize: "2.2rem", margin: "16px 0 8px 0", color: "#172033" }}>ATP Python Journey</h2>
+            <div style={{ fontSize: "3rem", fontWeight: "800", color: "#172033", margin: "12px 0" }}>
+              ₹49 <span style={{ fontSize: "1.1rem", color: "#6F756F", fontWeight: "normal" }}>/ ONE-TIME</span>
+            </div>
+
+            <p style={{ color: "#6F756F", fontSize: "0.95rem", marginBottom: "32px" }}>
+              One-time payment unlocks the complete course, practical labs, exam practice, and included study notes.
+            </p>
+
+            <div style={{ textAlign: "left", display: "flex", flexDirection: "column", gap: "12px", marginBottom: "32px", fontSize: "0.95rem" }}>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}><span>✓</span> <span>Complete UCEST105 Syllabus (Modules 1–4)</span></div>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}><span>✓</span> <span>Interactive Tuition-Style Guided Lessons</span></div>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}><span>✓</span> <span>Real Browser Python Execution & Checkers</span></div>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}><span>✓</span> <span>All 18 Official Practical Lab Experiments</span></div>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}><span>✓</span> <span>Viva Voice Practice & ESE Mock Exam</span></div>
+              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}><span>✓</span> <span>All ATP Revision Notes Included</span></div>
+            </div>
+
+            <Link to="/payment" onClick={() => playUiBubbleSound()} className="btn-primary" style={{ display: "block", padding: "16px", fontSize: "1.15rem", textDecoration: "none", boxShadow: "0 4px 14px rgba(23, 32, 51, 0.2)" }}>
+              UNLOCK PYTHON JOURNEY — ₹49
+            </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* FOOTER */}
+      <footer style={{ background: "#172033", color: "#8b9bb4", padding: "40px 24px", borderTop: "1px solid rgba(255,255,255,0.1)", fontSize: "0.9rem" }}>
+        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "20px" }}>
+          <div>
+            <strong style={{ color: "#F7F3EA", fontSize: "1.1rem" }}>ATP Python Journey</strong>
+            <p style={{ margin: "4px 0 0 0" }}>Algorithmic Thinking with Python • KTU S1 UCEST105</p>
+          </div>
+
+          <div style={{ display: "flex", gap: "20px" }}>
+            <Link to="/privacy" style={{ color: "#8b9bb4" }}>Privacy Policy</Link>
+            <Link to="/terms" style={{ color: "#8b9bb4" }}>Terms of Service</Link>
+            <Link to="/refund" style={{ color: "#8b9bb4" }}>Refund Policy</Link>
+            <Link to="/support" style={{ color: "#8b9bb4" }}>Support</Link>
+          </div>
         </div>
       </footer>
+
     </div>
   );
 }
-
-export default Home;

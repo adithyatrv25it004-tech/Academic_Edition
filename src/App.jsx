@@ -11,6 +11,11 @@ import Privacy from "./pages/Privacy";
 import Terms from "./pages/Terms";
 import Refund from "./pages/Refund";
 import Support from "./pages/Support";
+import Learn from "./pages/Learn";
+import Lesson from "./pages/Lesson";
+import LabList from "./pages/LabList";
+import Lab from "./pages/Lab";
+import Exam from "./pages/Exam";
 
 function App() {
   return (
@@ -29,6 +34,11 @@ function App() {
         <Route path="/terms" element={<Terms />} />
         <Route path="/refund" element={<Refund />} />
         <Route path="/support" element={<Support />} />
+        <Route path="/learn" element={<Learn />} />
+        <Route path="/learn/:lessonId" element={<Lesson />} />
+        <Route path="/learn/lab" element={<LabList />} />
+        <Route path="/learn/lab/:labId" element={<Lab />} />
+        <Route path="/learn/exam" element={<Exam />} />
       </Routes>
     </BrowserRouter>
   );

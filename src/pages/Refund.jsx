@@ -8,7 +8,7 @@ function Refund() {
         <Link className="auth-brand" to="/">
           <span className="auth-brand-icon">A</span>
           <div className="auth-brand-text">
-            <strong>ATP Revision Vault</strong>
+            <strong>ATP Python Journey</strong>
             <span>REFUND POLICY</span>
           </div>
         </Link>
@@ -26,7 +26,7 @@ function Refund() {
               <strong>Refund policy must be confirmed by the site owner before launch.</strong>
             </p>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              The ATP Revision Vault team is committed to customer satisfaction. Our refund policy is designed to be fair while protecting the integrity of our digital study materials.
+              The ATP Python Journey team is committed to customer satisfaction. Our refund policy is designed to be fair while protecting the integrity of our digital study materials.
             </p>
           </section>
 
@@ -59,7 +59,7 @@ function Refund() {
           <section style={{ marginBottom: "32px" }}>
             <h3 style={{ fontSize: "18px", marginBottom: "12px", color: "var(--ink)" }}>Digital Content Considerations</h3>
             <p style={{ lineHeight: "1.6", color: "var(--muted-brown)" }}>
-              As ATP Revision Vault provides digital study materials, please note:
+              As ATP Python Journey provides digital study materials, please note:
             </p>
             <ul style={{ paddingLeft: "20px", lineHeight: "1.8", color: "var(--muted-brown)" }}>
               <li>Once accessed, materials cannot be "returned" in the traditional sense</li>

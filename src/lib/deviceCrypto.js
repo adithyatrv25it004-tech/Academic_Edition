@@ -61,7 +61,7 @@ async function saveKeyPair(privateKey, publicKeyJwk, deviceId) {
  * Loads the stored key pair from IndexedDB.
  * @returns {Promise<{privateKey: CryptoKey, publicKeyJwk: object, deviceId: string} | null>}
  */
-async function loadKeyPair() {
+export async function loadKeyPair() {
   try {
     const db = await openKeyDB();
     return new Promise((resolve, reject) => {
@@ -181,10 +181,37 @@ export async function signChallenge(challenge) {
     challengeBytes
   );
 
-  // Encode signature as base64url
+  // Encode signature as base64url without padding
   const signatureBytes = new Uint8Array(signatureBuffer);
-  const base64 = btoa(String.fromCharCode(...signatureBytes));
+  let binary = '';
+  for (let i = 0; i < signatureBytes.byteLength; i++) {
+    binary += String.fromCharCode(signatureBytes[i]);
+  }
+  const base64 = btoa(binary);
   return base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
+}
+
+/**
+ * Checks if a server-stored public key matches a local JWK.
+ * @param {string | object} serverPublicKey
+ * @param {object} localJwk
+ * @returns {boolean}
+ */
+export function matchPublicKey(serverPublicKey, localJwk) {
+  if (!serverPublicKey || !localJwk) return false;
+  try {
+    const serverObj = typeof serverPublicKey === 'string' ? JSON.parse(serverPublicKey) : serverPublicKey;
+    return Boolean(
+      serverObj &&
+      localJwk &&
+      serverObj.x &&
+      localJwk.x &&
+      serverObj.x === localJwk.x &&
+      serverObj.y === localJwk.y
+    );
+  } catch {
+    return false;
+  }
 }
 
 /**
