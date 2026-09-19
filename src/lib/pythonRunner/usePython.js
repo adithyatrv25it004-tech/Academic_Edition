@@ -44,7 +44,7 @@ export function usePython() {
     };
   }, []);
 
-  const runCode = useCallback((code, input = []) => {
+  const runCode = useCallback((code, input = [], files = null) => {
     if (!globalWorker) throw new Error('Worker not initialized');
     setIsRunning(true);
     
@@ -60,7 +60,7 @@ export function usePython() {
           reject(err);
         }
       });
-      globalWorker.postMessage({ id, code, input });
+      globalWorker.postMessage({ id, code, input, files });
     });
   }, []);
 

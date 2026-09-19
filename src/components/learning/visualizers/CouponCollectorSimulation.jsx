@@ -10,17 +10,20 @@ export default function CouponCollectorSimulation() {
   const isComplete = collected.size === COUPONS.length;
 
   useEffect(() => {
-    let timer;
     if (isPlaying && !isComplete) {
-      timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         const randomCoupon = COUPONS[Math.floor(Math.random() * COUPONS.length)];
         setPurchases((prev) => [...prev, randomCoupon]);
-        setCollected((prev) => new Set(prev).add(randomCoupon));
+        setCollected((prev) => {
+          const nextSet = new Set(prev).add(randomCoupon);
+          if (nextSet.size === COUPONS.length) {
+            setIsPlaying(false);
+          }
+          return nextSet;
+        });
       }, 500);
-    } else if (isComplete) {
-      setIsPlaying(false);
+      return () => clearTimeout(timer);
     }
-    return () => clearTimeout(timer);
   }, [isPlaying, isComplete]);
 
   const handleBuy = () => {

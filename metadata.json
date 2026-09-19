@@ -1,0 +1,6 @@
+{
+  "name": "ATP Revision Vault",
+  "description": "ATP Python Journey & Revision Vault — Guided online tuition-style Python classroom, interactive labs, Pyodide compiler, and exam prep for KTU S1 UCEST105.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

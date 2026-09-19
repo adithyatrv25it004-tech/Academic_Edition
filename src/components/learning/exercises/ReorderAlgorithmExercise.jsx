@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
-export default function ReorderAlgorithmExercise({ blocks, correctOrder, onComplete }) {
-  const [items, setItems] = useState([]);
+export default function ReorderAlgorithmExercise({ blocks = [], correctOrder, onComplete }) {
+  // Initialize with deterministic scrambled order without calling setState in effect
+  const [items, setItems] = useState(() => {
+    if (!blocks || blocks.length === 0) return [];
+    // Deterministic swap: reverse the blocks so student has to put them in order
+    return [...blocks].reverse();
+  });
   const [status, setStatus] = useState(null); // 'success', 'error', null
   const [selectedId, setSelectedId] = useState(null); // for tap-based movement
-
-  useEffect(() => {
-    // Shuffle initial blocks if first load
-    const shuffled = [...blocks].sort(() => Math.random() - 0.5);
-    setItems(shuffled);
-  }, [blocks]);
 
   const moveItem = (index, direction) => {
     const newItems = [...items];

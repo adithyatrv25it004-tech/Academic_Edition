@@ -11,19 +11,19 @@ export default function BruteForceVisualizer(props) {
   const isMatched = candidate === targetNum;
 
   useEffect(() => {
-    let timer;
     if (isPlaying && candidate < targetNum) {
-      timer = setTimeout(() => {
+      const timer = setTimeout(() => {
         setCandidate((prev) => {
           const next = Math.min(targetNum, prev + Math.max(1, Math.floor((targetNum - prev) / 10)));
           setAttempts((a) => a + (next - prev));
+          if (next >= targetNum) {
+            setIsPlaying(false);
+          }
           return next;
         });
       }, 150);
-    } else if (candidate >= targetNum) {
-      setIsPlaying(false);
+      return () => clearTimeout(timer);
     }
-    return () => clearTimeout(timer);
   }, [isPlaying, candidate, targetNum]);
 
   const formattedCandidate = String(candidate).padStart(4, '0');

@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { supabase } from "../lib/supabase";
+import { supabase, isConfigured } from "../lib/supabase";
 import { useScrollReveal } from "../lib/useScrollReveal";
 import BookScene from "../components/three/BookScene";
 import { playUiBubbleSound } from "../lib/uiBubbleSound";
@@ -141,8 +141,8 @@ function StudentDashboard() {
         .eq("status", "active")
         .maybeSingle();
 
-      if (ent) {
-        // User has active entitlement, redirect to device activation
+      if (ent && isConfigured) {
+        // User has active entitlement in real database, redirect to device activation
         navigate("/device-activation", { replace: true });
         return;
       }
@@ -221,9 +221,43 @@ function StudentDashboard() {
           <div className="dashboard-user-section">
             <div className="dashboard-user-info">
               <span className="dashboard-welcome">Welcome, {user?.user_metadata?.name || user?.email?.split("@")[0]}</span>
-              <span className="dashboard-status-badge locked">🔒 LOCKED</span>
+              <span className="dashboard-status-badge locked">
+                {isConfigured ? "🔒 LOCKED" : "⚡ PREVIEW"}
+              </span>
             </div>
-            <div className="dashboard-menu">
+            <div className="dashboard-menu" style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+              <Link
+                to="/learn"
+                style={{
+                  background: "#172033",
+                  color: "#F7F3EA",
+                  padding: "6px 14px",
+                  borderRadius: "6px",
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  border: "1px solid #315C8C"
+                }}
+                onClick={playUiBubbleSound}
+              >
+                🎓 Classroom
+              </Link>
+              <Link
+                to="/learn/lab"
+                style={{
+                  background: "#F7F3EA",
+                  color: "#172033",
+                  padding: "6px 12px",
+                  borderRadius: "6px",
+                  fontSize: "0.85rem",
+                  fontWeight: 600,
+                  textDecoration: "none",
+                  border: "1px solid #C79A45"
+                }}
+                onClick={playUiBubbleSound}
+              >
+                🧪 Labs
+              </Link>
               <button className="dashboard-menu-btn" onClick={() => { playUiBubbleSound(); handleLogout(); }} aria-label="Logout">
                 Logout
               </button>
@@ -255,9 +289,17 @@ function StudentDashboard() {
                 <span>Access not unlocked</span>
               </div>
 
-              <div className="dashboard-hero-cta">
+              <div className="dashboard-hero-cta" style={{ flexWrap: "wrap", gap: "10px" }}>
+                <Link
+                  to="/learn"
+                  className="dashboard-primary-cta"
+                  style={{ background: "#172033", borderColor: "#315C8C", color: "#F7F3EA" }}
+                  onClick={playUiBubbleSound}
+                >
+                  🎓 ENTER PYTHON CLASSROOM →
+                </Link>
                 <Link to="/payment" className="dashboard-primary-cta" onClick={playUiBubbleSound}>
-                  UNLOCK THE COMPLETE PACK — <span className="dashboard-price">₹49</span> →
+                  UNLOCK COMPLETE PACK — <span className="dashboard-price">₹49</span> →
                 </Link>
                 <a href="#whats-included" className="dashboard-secondary-cta" onClick={playUiBubbleSound}>
                   Preview What's Inside ↓

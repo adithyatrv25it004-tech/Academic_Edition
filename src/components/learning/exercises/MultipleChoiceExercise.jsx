@@ -1,15 +1,38 @@
 import React, { useState } from 'react';
 import { playUiBubbleSound } from '../../../lib/uiBubbleSound';
 
-export default function MultipleChoiceExercise({ question, options, correctAnswer, explanation, onComplete }) {
+export default function MultipleChoiceExercise({
+  question,
+  options = [],
+  correctAnswer,
+  explanation,
+  optionFeedback = [],
+  wrongFeedback,
+  onComplete
+}) {
   const [selectedIdx, setSelectedIdx] = useState(null);
-  const [status, setStatus] = useState('idle'); // idle, correct, incorrect
+  const [status, setStatus] = useState('idle'); // 'idle' | 'correct' | 'incorrect'
+
+  // Extract option labels and targeted feedback
+  const parsedOptions = options.map((opt, idx) => {
+    if (typeof opt === 'object' && opt !== null) {
+      return {
+        text: opt.text || opt.label || '',
+        feedback: opt.feedback || opt.explanation || null
+      };
+    }
+    return {
+      text: String(opt),
+      feedback: optionFeedback[idx] || null
+    };
+  });
 
   const handleSelect = (idx) => {
-    if (status === 'correct') return; // Lock if already correct
+    if (status === 'correct') return;
     setSelectedIdx(idx);
-    
-    if (idx === correctAnswer) {
+
+    const isCorrect = idx === correctAnswer;
+    if (isCorrect) {
       setStatus('correct');
       playUiBubbleSound();
       if (onComplete) onComplete(true);
@@ -18,35 +41,84 @@ export default function MultipleChoiceExercise({ question, options, correctAnswe
     }
   };
 
+  const handleRetry = () => {
+    setSelectedIdx(null);
+    setStatus('idle');
+  };
+
+  // Determine feedback text for current incorrect selection
+  const getWrongFeedback = () => {
+    if (selectedIdx === null) return null;
+    const opt = parsedOptions[selectedIdx];
+    if (opt?.feedback) return opt.feedback;
+    if (wrongFeedback) {
+      if (typeof wrongFeedback === 'string') return wrongFeedback;
+      if (wrongFeedback[selectedIdx]) return wrongFeedback[selectedIdx];
+    }
+    // Intelligent domain-specific guidance if applicable
+    const selectedText = opt?.text || '';
+    if (question.includes('range(3)') && selectedText.includes('3')) {
+      return "Almost. Remember that range(3) stops before 3. So Python produces: 0, 1, 2. Try once more.";
+    }
+    return "Not quite. Review the rule carefully and give it another try.";
+  };
+
   return (
-    <div style={{ background: '#fff', border: '1px solid #d0d7de', borderRadius: '12px', padding: '24px', marginBottom: '32px', boxShadow: '0 1px 3px rgba(0,0,0,0.04)' }}>
-      <h3 style={{ margin: '0 0 20px 0', fontSize: '1.2rem', color: '#24292f' }}>{question}</h3>
-      
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        {options.map((opt, i) => {
+    <div
+      style={{
+        background: '#FFFFFF',
+        border: '1px solid #E2DACB',
+        borderRadius: '12px',
+        padding: '24px 28px',
+        marginBottom: '28px',
+        boxShadow: '0 4px 16px rgba(23, 32, 51, 0.04)'
+      }}
+    >
+      <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '16px' }}>
+        <span style={{ fontSize: '1.2rem' }}>🎯</span>
+        <span style={{ fontSize: '0.8rem', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#315C8C' }}>
+          Concept Checkpoint
+        </span>
+      </div>
+
+      <h3 style={{ margin: '0 0 20px 0', fontSize: '1.18rem', color: '#172033', fontWeight: 700, lineHeight: 1.5 }}>
+        {question}
+      </h3>
+
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        {parsedOptions.map((opt, i) => {
           const isSelected = selectedIdx === i;
           const isCorrectAns = i === correctAnswer;
-          
-          let bgColor = '#f6f8fa';
-          let borderColor = '#d0d7de';
-          let textColor = '#24292f';
-          
+
+          let bgColor = '#FDFBF7';
+          let borderColor = '#E2DACB';
+          let textColor = '#2B3545';
+          let badgeBg = '#EFEAE1';
+          let badgeColor = '#687588';
+
           if (isSelected) {
             if (status === 'correct') {
-              bgColor = '#dafbe1';
-              borderColor = '#4ac26b';
-              textColor = '#1a7f37';
+              bgColor = '#F0FDF4';
+              borderColor = '#22C55E';
+              textColor = '#14532D';
+              badgeBg = '#22C55E';
+              badgeColor = '#FFFFFF';
             } else if (status === 'incorrect') {
-              bgColor = '#ffebe9';
-              borderColor = '#ff8182';
-              textColor = '#d1242f';
+              bgColor = '#FEF2F2';
+              borderColor = '#EF4444';
+              textColor = '#991B1B';
+              badgeBg = '#EF4444';
+              badgeColor = '#FFFFFF';
             }
           } else if (status === 'correct' && isCorrectAns) {
-            // Highlight the correct answer if they got it right (should already be selected, but just in case)
-            bgColor = '#dafbe1';
-            borderColor = '#4ac26b';
-            textColor = '#1a7f37';
+            bgColor = '#F0FDF4';
+            borderColor = '#22C55E';
+            textColor = '#14532D';
+            badgeBg = '#22C55E';
+            badgeColor = '#FFFFFF';
           }
+
+          const optionLetters = ['A', 'B', 'C', 'D', 'E', 'F'];
 
           return (
             <button
@@ -55,29 +127,104 @@ export default function MultipleChoiceExercise({ question, options, correctAnswe
               disabled={status === 'correct'}
               style={{
                 background: bgColor,
-                border: `1px solid ${borderColor}`,
+                border: `1.5px solid ${borderColor}`,
                 color: textColor,
-                padding: '16px',
+                padding: '14px 18px',
                 borderRadius: '8px',
                 textAlign: 'left',
-                fontSize: '1.05rem',
+                fontSize: '1rem',
                 cursor: status === 'correct' ? 'default' : 'pointer',
-                transition: 'all 0.2s',
-                fontWeight: isSelected ? 600 : 400
+                transition: 'all 0.15s ease',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '14px'
               }}
             >
-              {opt}
+              <span
+                style={{
+                  width: '26px',
+                  height: '26px',
+                  borderRadius: '50%',
+                  background: badgeBg,
+                  color: badgeColor,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '0.85rem',
+                  fontWeight: 700,
+                  flexShrink: 0
+                }}
+              >
+                {optionLetters[i] || i + 1}
+              </span>
+              <span style={{ fontWeight: isSelected ? 600 : 400, flex: 1 }}>
+                {opt.text}
+              </span>
             </button>
           );
         })}
       </div>
 
-      {status === 'correct' && explanation && (
-        <div style={{ marginTop: '20px', padding: '16px', background: '#f6f8fa', borderRadius: '8px', borderLeft: '4px solid #4ac26b' }}>
-          <strong style={{ color: '#1a7f37', display: 'block', marginBottom: '8px' }}>Excellent!</strong>
-          <p style={{ margin: 0, color: '#57606a', fontSize: '0.95rem' }}>{explanation}</p>
+      {/* Targeted Feedback for Incorrect Selection */}
+      {status === 'incorrect' && (
+        <div
+          style={{
+            marginTop: '18px',
+            padding: '14px 18px',
+            background: '#FFF9F0',
+            borderRadius: '8px',
+            border: '1px solid #F3DFC1',
+            borderLeft: '4px solid #C79A45'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+            <strong style={{ color: '#8C6718', fontSize: '0.95rem' }}>ATP Teacher Feedback</strong>
+            <button
+              onClick={handleRetry}
+              style={{
+                background: '#C79A45',
+                color: '#FFFFFF',
+                border: 'none',
+                padding: '4px 12px',
+                borderRadius: '4px',
+                fontSize: '0.82rem',
+                fontWeight: 600,
+                cursor: 'pointer'
+              }}
+            >
+              Try Once More
+            </button>
+          </div>
+          <p style={{ margin: 0, color: '#3A2E1C', fontSize: '0.94rem', lineHeight: 1.5 }}>
+            {getWrongFeedback()}
+          </p>
+        </div>
+      )}
+
+      {/* Pedagogical Reinforcement for Correct Answer */}
+      {status === 'correct' && (
+        <div
+          style={{
+            marginTop: '18px',
+            padding: '16px 20px',
+            background: '#F4F9F4',
+            borderRadius: '8px',
+            border: '1px solid #CCE7CE',
+            borderLeft: '4px solid #22C55E'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+            <span style={{ color: '#15803D', fontWeight: 'bold' }}>✓</span>
+            <strong style={{ color: '#15803D', fontSize: '1rem' }}>Exactly Right!</strong>
+          </div>
+          {explanation && (
+            <p style={{ margin: 0, color: '#1E4620', fontSize: '0.95rem', lineHeight: 1.5 }}>
+              {explanation}
+            </p>
+          )}
         </div>
       )}
     </div>
   );
 }
+

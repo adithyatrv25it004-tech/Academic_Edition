@@ -88,14 +88,20 @@ export default function RecursionVisualizer(props) {
   const maxStep = steps.length - 1;
 
   useEffect(() => {
-    let timer;
-    if (isPlaying && stepIndex < maxStep) {
-      timer = setTimeout(() => {
-        setStepIndex((prev) => prev + 1);
-      }, 1200);
-    } else if (stepIndex >= maxStep) {
-      setIsPlaying(false);
+    if (!isPlaying) return;
+    if (stepIndex >= maxStep) {
+      return;
     }
+    const timer = setTimeout(() => {
+      setStepIndex((prev) => {
+        const next = prev + 1;
+        if (next >= maxStep) {
+          setIsPlaying(false);
+          return maxStep;
+        }
+        return next;
+      });
+    }, 1200);
     return () => clearTimeout(timer);
   }, [isPlaying, stepIndex, maxStep]);
 

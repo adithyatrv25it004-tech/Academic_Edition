@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { playUiBubbleSound } from '../../../lib/uiBubbleSound';
 
 export default function PseudocodeBuilder({ availableBlocks, correctOrder, onComplete }) {
   const [builtSequence, setBuiltSequence] = useState([]);
   const [status, setStatus] = useState(null);
+  const nextIdRef = useRef(1);
 
   const addBlock = (block) => {
-    setBuiltSequence([...builtSequence, { ...block, instanceId: Date.now() + Math.random(), indent: 0 }]);
+    const id = nextIdRef.current++;
+    setBuiltSequence(prev => [...prev, { ...block, instanceId: `blk_${id}`, indent: 0 }]);
     setStatus(null);
   };
 

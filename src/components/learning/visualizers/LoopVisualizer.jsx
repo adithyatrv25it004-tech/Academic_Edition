@@ -8,14 +8,20 @@ export default function LoopVisualizer({ config, steps: directSteps }) {
   const maxStep = Math.max(0, steps.length - 1);
 
   useEffect(() => {
-    let timer;
-    if (isPlaying && currentStepIndex < maxStep) {
-      timer = setTimeout(() => {
-        setCurrentStepIndex((prev) => prev + 1);
-      }, 1000);
-    } else if (currentStepIndex >= maxStep) {
-      setIsPlaying(false);
+    if (!isPlaying) return;
+    if (currentStepIndex >= maxStep) {
+      return;
     }
+    const timer = setTimeout(() => {
+      setCurrentStepIndex((prev) => {
+        const next = prev + 1;
+        if (next >= maxStep) {
+          setIsPlaying(false);
+          return maxStep;
+        }
+        return next;
+      });
+    }, 1000);
     return () => clearTimeout(timer);
   }, [isPlaying, currentStepIndex, maxStep]);
 

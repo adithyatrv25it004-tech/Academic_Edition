@@ -52,15 +52,18 @@ export default function MergeSortVisualizer(props) {
   const maxStage = stages.length - 1;
 
   useEffect(() => {
-    let timer;
     if (isPlaying && stageIndex < maxStage) {
-      timer = setTimeout(() => {
-        setStageIndex((prev) => prev + 1);
+      const timer = setTimeout(() => {
+        setStageIndex((prev) => {
+          const next = prev + 1;
+          if (next >= maxStage) {
+            setIsPlaying(false);
+          }
+          return next;
+        });
       }, 1500);
-    } else if (stageIndex >= maxStage) {
-      setIsPlaying(false);
+      return () => clearTimeout(timer);
     }
-    return () => clearTimeout(timer);
   }, [isPlaying, stageIndex, maxStage]);
 
   const currentStage = stages[stageIndex];
